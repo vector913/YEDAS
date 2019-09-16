@@ -1,0 +1,7 @@
+#Internal package file, do not edit.
+#Wed Sep 11 16:47:17 KST 2019
+0.baseType=DIRECTORY
+0.base=C\:\\Users\\user\\AndroidStudioProjects\\YEDAS\\app\\build\\intermediates\\merged_assets\\debug\\out
+0.path=crashlytics-build.properties
+0.set=ASSET
+count=1

@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "92537471845",
+    "firebase_url": "https://yedas-e5423.firebaseio.com",
+    "project_id": "yedas-e5423",
+    "storage_bucket": "yedas-e5423.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:92537471845:android:049cab44eefcdcafcdd78c",
+        "android_client_info": {
+          "package_name": "com.example.yedas"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "92537471845-et17q55sbp6rprdrrn5pgsufgv9mrv9m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.yedas",
+            "certificate_hash": "7755db420e68285ba8d9a1929e097a1130a27cfc"
+          }
+        },
+        {
+          "client_id": "92537471845-dmas8hhchukiu0fe43rus9o7o321odkn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCva3vcwEvsgJnEXcyhwvNMB4OguQELUeU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "92537471845-dmas8hhchukiu0fe43rus9o7o321odkn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

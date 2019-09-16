@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.1"
+        android:layout_gravity="center_horizontal">
+        <TextView
+            android:text="문서 이름"
+            android:id="@+id/document_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity= "center"
+            android:layout_alignParentTop="true"/>
+
+        <TextView
+            android:id="@+id/document_sender"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="작성자 이름"
+            android:layout_below="@id/document_id"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="2">
+        <TextView
+            android:text="문서설명"
+            android:gravity="center"
+            android:id="@+id/document_descript"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.5"
+        android:orientation="vertical">
+
+        <TableRow>
+
+            <TextView
+                android:id="@+id/document_file_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="파일 이름" />
+        </TableRow>
+
+        <TableRow>
+
+            <Button
+                android:id="@+id/send_confirm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:gravity="center"
+                android:text="결재 승인" />
+
+            <Button
+                android:id="@+id/send_re_check"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:gravity="center"
+                android:text="문서 재검토" />
+
+            <Button
+                android:id="@+id/send_decline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:gravity="center"
+                android:text="결재 거절" />
+        </TableRow>
+
+
+    </TableLayout>
+
+</LinearLayout>

@@ -58,8 +58,8 @@ public class MainActivity extends AppCompatActivity{
         btn_set_usr_info = findViewById(R.id.setting_set);
 
         firebaseAuth = FirebaseAuth.getInstance();
-       // mDatabase = FirebaseDatabase.getInstance().getReference();
-       // myRef    = mDatabase.child("yedas_user/");
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        myRef    = mDatabase.child("User");
 
         authStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -73,54 +73,50 @@ public class MainActivity extends AppCompatActivity{
         };
 
         final FirebaseUser user  = firebaseAuth.getCurrentUser();
-        if(getIntent().getStringExtra("name")!=null) {
-            names = getIntent().getStringExtra("name");
-        }
         if(user!=null) {
-            if(names!=null) {/*
-                DatabaseReference userRef = myRef.child(names);
-                userRef.addValueEventListener(new ValueEventListener() {
+                myRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        User userd = dataSnapshot.child(names).getValue(User.class);
-                        emaisl = userd.getEmail();
-                        depts = userd.getDepartment();
-                        jobs = userd.getJob();
-                        user_id.setText(emaisl);
-                        user_name.setText(names);
-                        user_dept.setText(depts);
-                        user_job.setText(jobs);
-                        String DIRECTORY = Environment.getExternalStorageDirectory().getPath() + "/Signature/";
-                        String pic_name = "signature";
-                        String StoredPath = DIRECTORY + pic_name + ".png";
+                        User userd = dataSnapshot.child(user.getUid()).getValue(User.class);
+                        if(userd!=null) {
+                            emaisl = userd.getEmail();
+                            depts = userd.getDepartment();
+                            jobs = userd.getJob();
+                            names = userd.getUsername();
+                            user_id.setText(emaisl);
+                            user_name.setText(names);
+                            user_dept.setText(depts);
+                            user_job.setText(jobs);
+                            String DIRECTORY = Environment.getExternalStorageDirectory().getPath() + "/Signature/";
+                            String pic_name = "signature";
+                            String StoredPath = DIRECTORY + pic_name + ".png";
 
-                        File file = new File(StoredPath);
-                        if (file != null) {
-                            user_sign.setImageDrawable(Drawable.createFromPath(file.toString()));
-                        } else {
-                            user_sign.setImageResource(R.drawable.signature);
+                            File file = new File(StoredPath);
+                            if (file != null) {
+                                user_sign.setImageDrawable(Drawable.createFromPath(file.toString()));
+                            } else {
+                                user_sign.setImageResource(R.drawable.signature);
+                            }
+                        }else{
+                            user_id.setText(user.getEmail());
+                            user_name.setText("정보를 수정하셔야 합니다.");
+                            String DIRECTORY = Environment.getExternalStorageDirectory().getPath() + "/Signature/";
+                            String pic_name = "signature";
+                            String StoredPath = DIRECTORY + pic_name + ".png";
+
+                            File file = new File(StoredPath);
+                            if (file != null) {
+                                user_sign.setImageDrawable(Drawable.createFromPath(file.toString()));
+                            } else {
+                                user_sign.setImageResource(R.drawable.signature);
+                            }
                         }
                     }
-
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
                         Log.e("MainActivity","Error Occurred");
                     }
-                });*/
-            }else {
-                user_id.setText(user.getEmail());
-                user_name.setText(user.getDisplayName());
-                String DIRECTORY = Environment.getExternalStorageDirectory().getPath() + "/Signature/";
-                String pic_name = "signature";
-                String StoredPath = DIRECTORY + pic_name + ".png";
-
-                File file = new File(StoredPath);
-                if (file != null) {
-                    user_sign.setImageDrawable(Drawable.createFromPath(file.toString()));
-                } else {
-                    user_sign.setImageResource(R.drawable.signature);
-                }
-            }
+                });
         }else{
           user_id.setText("no user know");
           btn_set_usr_info.setClickable(false);

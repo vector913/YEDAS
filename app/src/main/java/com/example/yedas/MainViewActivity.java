@@ -8,6 +8,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -19,6 +20,11 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -33,8 +39,10 @@ public class MainViewActivity extends AppCompatActivity implements NavigationVie
 
         TextView user_name;
         TextView user_email;
-
         ListView listView;
+
+        private DatabaseReference mDatabase;
+        private DatabaseReference myRef;
 
     protected void onCreate (Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -52,11 +60,30 @@ public class MainViewActivity extends AppCompatActivity implements NavigationVie
         user_name = headerView.findViewById(R.id.user_name);
         user_email = headerView.findViewById(R.id.user_email);
         firebaseAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        myRef    = mDatabase.child("User");
 
         final FirebaseUser user  = firebaseAuth.getCurrentUser();
+
         if(user!=null) {
-            user_name.setText(user.getDisplayName());
-            user_email.setText(user.getEmail());
+            myRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    User userd = dataSnapshot.child(user.getUid()).getValue(User.class);
+                    if (userd != null) {
+                        user_name.setText(userd.getUsername());
+                        user_email.setText(userd.getEmail());
+                    }else{
+                        user_name.setText(user.getDisplayName());
+                        user_email.setText(user.getEmail());
+                    }
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
         }else{
             startActivity(new Intent(getApplicationContext(), LoadingScreenActivity.class));
             finish();

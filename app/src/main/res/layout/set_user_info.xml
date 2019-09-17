@@ -17,11 +17,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
         <EditText
-        android:id="@+id/input_name"
-            android:text="성함을 입력하세요"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="25"/>
+            android:id="@+id/input_name"
+            android:hint="성함을 입력하세요"
+            android:inputType="text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="25"/>
         <View
             android:id="@+id/divider1"
             android:layout_width="match_parent"
@@ -92,7 +93,6 @@
             android:id="@+id/request_change_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@+id/verification"
             android:layout_toEndOf="@+id/verification"
             android:text="정보수정" />
 

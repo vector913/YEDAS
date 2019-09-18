@@ -11,17 +11,11 @@ import android.widget.Spinner;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 public class UserInfoChangeActivity extends AppCompatActivity {
     EditText input_name;
@@ -58,14 +52,12 @@ public class UserInfoChangeActivity extends AppCompatActivity {
             verif_t.setTextColor(Color.parseColor("#4CAF50"));
         }
 
-
         ArrayAdapter<String> adapter_dept = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,deptitems);
         ArrayAdapter<String> adapter_job = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,jobitems);
         adapter_dept.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         adapter_job.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         dept.setAdapter(adapter_dept);
         job.setAdapter(adapter_job);
-
 
     }
 
@@ -115,7 +107,7 @@ public class UserInfoChangeActivity extends AppCompatActivity {
                 }else{
                     Intent set_dat = new Intent(getApplicationContext(),MainActivity.class);
                     String emails = user.getEmail();
-                    set_dat.putExtra("name",namedat);
+
                     user = FirebaseAuth.getInstance().getCurrentUser();
                     User userdat = new User(namedat,emails,deptdat,jobdat);
 
@@ -132,6 +124,7 @@ public class UserInfoChangeActivity extends AppCompatActivity {
             @Override
              public void onClick(View v) {
                 Toast.makeText(getApplicationContext(),"정보수정을 취소하였습니다.",Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(getApplicationContext(),MainActivity.class));
                 finish();
             }
         });

@@ -18,14 +18,25 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 public class DrawSignActivity  extends AppCompatActivity {
     private Button btnClear, btnSave, btnBack;
@@ -34,6 +45,8 @@ public class DrawSignActivity  extends AppCompatActivity {
     private View view;
     private signature mSignature;
     private Bitmap bitmap;
+    private byte[] data;
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
     // Creating Separate Directory for saving Generated Images
     String DIRECTORY = Environment.getExternalStorageDirectory().getPath() + "/Signature/";
@@ -66,12 +79,10 @@ public class DrawSignActivity  extends AppCompatActivity {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 view.setDrawingCacheEnabled(true);
                 mSignature.save(view,StoredPath);
                 finish();
                 Toast.makeText(getApplicationContext(), StoredPath+"위치에 저장합니다.", Toast.LENGTH_SHORT).show();
-
             }
         });
 

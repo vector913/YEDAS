@@ -15,30 +15,36 @@
         android:orientation="vertical" />
 
     <LinearLayout
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="10dp"
         android:orientation="horizontal">
 
         <Button
+            android:id="@+id/btn_clear"
+            android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/btnclear"
-            android:text="초기화"/>
-
+            android:text="사인 초기화"/>
         <Button
+            android:id="@+id/send_re_check"
+            android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/btnsave"
-            android:text="저장"/>
+            android:text="뒤로가기" />
         <Button
+            android:layout_weight="1"
+            android:id="@+id/send_confirm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/btnback"
-            android:text="뒤로가기"/>
-
+            android:text="결재 승인" />
+        <Button
+            android:id="@+id/send_decline"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="결재 거절" />
     </LinearLayout>
+
 
 </LinearLayout>

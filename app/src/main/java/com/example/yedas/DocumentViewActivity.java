@@ -1,27 +1,51 @@
 package com.example.yedas;
 
-import android.app.ActionBar;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.pdf.PdfRenderer;
 import android.os.Bundle;
-import android.view.MenuItem;
+import android.os.Environment;
+import android.os.ParcelFileDescriptor;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.core.utilities.Utilities;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.internal.Util;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.util.ArrayList;
+
 
 public class DocumentViewActivity extends AppCompatActivity {
     TextView doc_id;
     TextView doc_sender;
     TextView doc_descript;
+    TextView doc_date;
     TextView doc_file_name;
     Button confirm_b;
-    Button resend_b;
     Button decline_b;
-    String doc_dat,writer_dat;
+
+    FirebaseAuth firebaseAuth;
+    String filename,type,tmp;
+    ArrayList<Bitmap> bitmap;
+
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+    StorageReference mStorageRef = storage.getReferenceFromUrl("gs://yedas-e5423.appspot.com");
+    StorageReference pathReference;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,40 +53,83 @@ public class DocumentViewActivity extends AppCompatActivity {
 
         doc_id = findViewById(R.id.document_id);
         doc_sender = findViewById(R.id.document_sender);
+        doc_date = findViewById(R.id.document_date);
         doc_descript = findViewById(R.id.document_descript);
         doc_file_name = findViewById(R.id.document_file_name);
 
-        confirm_b = findViewById(R.id.send_confirm);
-        resend_b = findViewById(R.id.send_re_check);
-        decline_b = findViewById(R.id.send_decline);
+        confirm_b = findViewById(R.id.goto_doc);
+        decline_b = findViewById(R.id.cancel_back);
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        final FirebaseUser user  = firebaseAuth.getCurrentUser();
+
 
         confirm_b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "결재가 승인 되었습니다.", Toast.LENGTH_SHORT).show();
-                finish();
-            }
-        });
+                try{
+                    String path = Environment.getExternalStorageDirectory().getAbsolutePath();
+                    final File root = new File(path,"/YEDAS/");
+                    if(!root.exists()){
+                        root.mkdirs();
+                    }
+                    final File localFile = new File(root,filename);
 
-        resend_b.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "서류가 재요청 되었습니다.", Toast.LENGTH_SHORT).show();
-                finish();
+                    pathReference.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                            Toast.makeText(DocumentViewActivity.this, filename + "이 다운로드 중입니다.\n잠시만 기다려주세요!", Toast.LENGTH_SHORT).show();
+                            Log.e("firebase ", ";local tem file created  created " + localFile.toString());
+                            try{
+                                bitmap = pdfToBitmap(localFile);
+                                Intent intent = new Intent(getApplicationContext(),DrawSignActivity.class);
+                                Bitmap bits = bitmap.get(0);
+                                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                                bits.compress(Bitmap.CompressFormat.PNG,100,stream);
+                                byte[] bytes = stream.toByteArray();
+
+                                intent.putExtra("filename",tmp);
+                                intent.putExtra("Image",bytes);
+                                startActivity(intent);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getApplicationContext(), filename + "이 존재 하지 않습니다. 관리자에게 문의하세요.", Toast.LENGTH_SHORT).show();
+                            Log.e("firebase ", ";local tem file not created  created " + localFile.toString());
+                            Log.e("YEDAS ", ";check whether permission is granted" + localFile.toString());
+                        }
+                    });
+
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+               // Toast.makeText(getApplicationContext(), "결재가 승인 되었습니다.", Toast.LENGTH_SHORT).show();
+
             }
         });
 
         decline_b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "결재가 거부 되었습니다.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "결재가 취소 되었습니다.", Toast.LENGTH_SHORT).show();
                 finish();
             }
         });
-        doc_dat = getIntent().getStringExtra("doc_dat");
-        writer_dat = getIntent().getStringExtra("writer_dat");
-        doc_id.setText(doc_dat);
-        doc_sender.setText(writer_dat);
+
+        doc_date.setText(getIntent().getStringExtra("doc_date"));
+        doc_id.setText(getIntent().getStringExtra("doc_dat"));
+        doc_sender.setText(getIntent().getStringExtra("writer_dat"));
+        type = getIntent().getStringExtra("type");
+        filename = getIntent().getStringExtra("doc_dat")+"."+type;
+        tmp = getIntent().getStringExtra("doc_dat");
+        doc_file_name.setText(filename);
+        assert user != null;
+        pathReference = mStorageRef.child(user.getUid()).child(filename);
+
     }
 
     @Override
@@ -78,4 +145,38 @@ public class DocumentViewActivity extends AppCompatActivity {
                     }
                 }).create().show();
     }
+
+    private  ArrayList<Bitmap> pdfToBitmap(File pdfFile) {
+        ArrayList<Bitmap> bitmaps = new ArrayList<>();
+        try {
+            PdfRenderer renderer = new PdfRenderer(ParcelFileDescriptor.open(pdfFile, ParcelFileDescriptor.MODE_READ_ONLY));
+
+            Bitmap bitmap;
+            final int pageCount = renderer.getPageCount();
+            for (int i = 0; i < pageCount; i++) {
+                PdfRenderer.Page page = renderer.openPage(i);
+
+                int width = getResources().getDisplayMetrics().densityDpi / 72 * page.getWidth();
+                int height = getResources().getDisplayMetrics().densityDpi / 72 * page.getHeight();
+                bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+
+                page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
+
+                bitmaps.add(bitmap);
+
+                // close the page
+                page.close();
+
+            }
+
+            // close the renderer
+            renderer.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return bitmaps;
+
+    }
+
 }

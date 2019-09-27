@@ -2,7 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
+    <TextView
+        android:textSize="30sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:text="정보수정"
+        android:textColor="#000000"
+        android:textStyle="bold"/>
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -88,21 +97,24 @@
             android:textColor="#E2633C"
             android:layout_width="230dp"
             android:layout_height="wrap_content" />
-
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
         <Button
             android:id="@+id/request_change_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/verification"
+            android:layout_weight="1"
             android:text="정보수정" />
 
         <Button
             android:id="@+id/request_cancel_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="2dp"
-            android:layout_toEndOf="@+id/request_change_btn"
+            android:layout_weight="1"
             android:text="취소" />
-    </RelativeLayout>
+</LinearLayout>
 
 </LinearLayout>

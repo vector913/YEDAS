@@ -7,12 +7,14 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -23,13 +25,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 
 public class MainViewActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
         Toolbar toolbar;
-        FloatingActionButton fab;
+//        FloatingActionButton fab;
         FirebaseAuth firebaseAuth;
-
         DrawerLayout drawer;
         NavigationView navigationView;
         ActionBarDrawerToggle toggle;
@@ -40,7 +42,15 @@ public class MainViewActivity extends AppCompatActivity implements NavigationVie
 
         private DatabaseReference mDatabase;
         private DatabaseReference myRef;
+        private DatabaseReference fDatabase;
+        private DatabaseReference fRef;
 
+        String filename;
+        String sender;
+        String date;
+        String type;
+
+         ListViewAdapter adapter;
     protected void onCreate (Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.nav_view);
@@ -52,15 +62,23 @@ public class MainViewActivity extends AppCompatActivity implements NavigationVie
         drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
 
-        fab = findViewById(R.id.fab);
+//        fab = findViewById(R.id.fab);
         View headerView = navigationView.getHeaderView(0);
         user_name = headerView.findViewById(R.id.user_name);
         user_email = headerView.findViewById(R.id.user_email);
+        filename = "is null";
+        sender = "no none";
+
         firebaseAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        myRef    = mDatabase.child("User");
+        myRef  = mDatabase.child("User");
+
+        fDatabase = FirebaseDatabase.getInstance().getReference();
+        fRef = fDatabase.child("Files");
 
         final FirebaseUser user  = firebaseAuth.getCurrentUser();
+        final ArrayList<ListViewitem> data=new ArrayList<>();
+        adapter = new ListViewAdapter(this,R.layout.document_item,data);
 
         if(user!=null) {
             myRef.addValueEventListener(new ValueEventListener() {
@@ -80,18 +98,52 @@ public class MainViewActivity extends AppCompatActivity implements NavigationVie
 
                 }
             });
+            fRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for(DataSnapshot ds : dataSnapshot.child(user.getUid()).getChildren()) {
+                        Document doc = ds.getValue(Document.class);
+                        if (ds != null) {
+                            assert doc != null;
+                            filename = doc.getfile();
+                            sender = doc.getSender();
+                            if (sender.equals("")) {
+                                sender = "Is empty";
+                            }
+                            type = doc.getType();
+                            date = doc.getDate();
+                        } else {
+                            filename = "파일이 전송된 것이 없습니다.";
+                            sender = " ";
+                            data.add(new ListViewitem(filename,sender));
+                            break;
+                        }
+
+                        ListViewitem u = new ListViewitem(filename, sender);
+                        data.add(u);
+                    }
+                    listView.setAdapter(adapter);
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    filename = "파일이 전송된 것이 없습니다.";
+                    sender = " ";
+                    data.add(new ListViewitem(filename,sender));
+                    listView.setAdapter(adapter);
+                }
+            });
 
         }else{
             startActivity(new Intent(getApplicationContext(), LoadingScreenActivity.class));
             finish();
         }
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "앞으로 이버튼을 누르게 된다면\n 데이터 전송 예정", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "앞으로 이버튼을 누르게 된다면\n 데이터 전송 예정", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
 
         toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -99,29 +151,24 @@ public class MainViewActivity extends AppCompatActivity implements NavigationVie
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
 
-        /* 아직까지는 아니지만 현재 임의로 List View 사용하여 document 받아옴*/
 
-        final ArrayList<ListViewitem> data=new ArrayList<>();
-        ListViewitem u1 = new ListViewitem("기안지(호산나 야유회)","박영길");
-        ListViewitem u2 = new ListViewitem("찬양경연대회 기안지","박영수");
 
-        data.add(u1);
-        data.add(u2);
-
-        final ListViewAdapter adapter = new ListViewAdapter(this,R.layout.document_item,data);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Intent doclist = new Intent(getApplicationContext(), DocumentViewActivity.class);
             String Doc = adapter.getDocname(position);
             String Writer = adapter.getWritername(position);
+            doclist.putExtra("file_name",filename);
+            doclist.putExtra("doc_date",date);
             doclist.putExtra("doc_dat",Doc);
             doclist.putExtra("writer_dat",Writer);
+            doclist.putExtra("type",type);
             startActivity(doclist);
             finish();
             }
         });
-        listView.setAdapter(adapter);
+       // listView.setAdapter(adapter);
     }
 
         @Override

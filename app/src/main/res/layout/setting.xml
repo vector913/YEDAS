@@ -15,11 +15,17 @@
         android:textColor="@color/colorAccent"
         android:layout_marginTop="100dp"
         android:text="유저아이디"
-            android:textSize="24dp"
+            android:textSize="24sp"
         android:textAlignment="center" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#2F65D1"
+            />
         <TableRow>
             <TextView
+                android:textSize="18sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/setting_user_name"
@@ -33,6 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/setting_user_job"
+            android:textSize="18sp"
             android:textColor="#000000"
             android:textStyle="bold"
             android:layout_weight="0.5"
@@ -42,6 +49,7 @@
                 android:id="@+id/setting_department"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="18sp"
                 android:text="부서"
                 android:textAlignment="center"
                 android:textColor="#000000"
@@ -49,23 +57,11 @@
                 android:textStyle="bold" />
         </TableRow>
 
-            <ImageView
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-                android:layout_marginTop="30dp"
-            android:id="@+id/setting_user_signature"
-            android:textColor="#000000"
-            android:textStyle="bold"
-            android:src="@drawable/signature"
-            android:text="본인 서명"
-            android:textAlignment="center" />
-
 
 </TableLayout>
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
             <Button
             android:id="@+id/setting_set"
             style="?android:textAppearanceSmall"
@@ -75,10 +71,6 @@
             android:layout_marginTop="16dp"
             android:text="유저 정보 수정 요청"
             />
-
-
-
-
         <TableRow>
     <Button
         android:id="@+id/go_backs"
@@ -112,7 +104,6 @@
         android:textColor="@android:color/white"
         android:textStyle="bold"
         android:background="@color/colorAccent"/>
-
         </TableRow>
     </TableLayout>
 </LinearLayout>

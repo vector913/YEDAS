@@ -2,22 +2,18 @@ package com.example.yedas;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.bumptech.glide.Glide;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,15 +23,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-
-import java.io.File;
 
 
 public class MainActivity extends AppCompatActivity{
     TextView user_id,user_name,user_job,user_dept;
-    ImageView user_sign;
     Button btnDeleteUser,btnLogout, btngoback, btn_set_usr_info;
     FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener  authStateListener;
@@ -54,7 +45,6 @@ public class MainActivity extends AppCompatActivity{
         user_job = findViewById(R.id.setting_user_job);
         user_dept = findViewById(R.id.setting_department);
 
-        user_sign = findViewById(R.id.setting_user_signature);
 
         btnDeleteUser = findViewById(R.id.deleteuser);
         btnLogout = findViewById(R.id.confirm);
@@ -92,29 +82,10 @@ public class MainActivity extends AppCompatActivity{
                             user_dept.setText(depts);
                             user_job.setText(jobs);
 
-                                String DIRECTORY = Environment.getExternalStorageDirectory().getPath() + "/Signature/";
-                                String pic_name = "signature";
-                                String StoredPath = DIRECTORY + pic_name + ".png";
 
-                                File file = new File(StoredPath);
-                                if (file != null) {
-                                    user_sign.setImageDrawable(Drawable.createFromPath(file.toString()));
-                                } else {
-                                    user_sign.setImageResource(R.drawable.signature);
-                                }
                         }else{
                             user_id.setText(user.getEmail());
                             user_name.setText("정보를 수정하셔야 합니다.");
-                            String DIRECTORY = Environment.getExternalStorageDirectory().getPath() + "/Signature/";
-                            String pic_name = "signature";
-                            String StoredPath = DIRECTORY + pic_name + ".png";
-
-                            File file = new File(StoredPath);
-                            if (file != null) {
-                                user_sign.setImageDrawable(Drawable.createFromPath(file.toString()));
-                            } else {
-                                user_sign.setImageResource(R.drawable.signature);
-                            }
                         }
                     }
                     @Override
@@ -127,28 +98,14 @@ public class MainActivity extends AppCompatActivity{
           btn_set_usr_info.setClickable(false);
         }
 
-        user_sign.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new AlertDialog.Builder(MainActivity.this)
-                        .setTitle("서명 만들기")
-                        .setMessage("서명을 생성하러 가시겠습니까?")
-                        .setNegativeButton(android.R.string.no, null)
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface arg0, int arg1) {
-                                startActivity(new Intent(getApplicationContext(),DrawSignActivity.class));
-                                //finish();
-                            }
-                        }).create().show();
-            }
-        });
+
 
         btn_set_usr_info.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new AlertDialog.Builder(MainActivity.this)
-                        .setTitle("인증받기")
-                        .setMessage("사용자 인증을 받으시러 가시겠습니까?")
+                        .setTitle("정보수정")
+                        .setMessage("사용자 정보를 수정하러 가시겠습니까?")
                         .setNegativeButton(android.R.string.no, null)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface arg0, int arg1) {

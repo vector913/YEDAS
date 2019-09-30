@@ -1275,6 +1275,7 @@ id button_continue
 id button_create
 id button_done
 id button_next
+id button_pre_doc
 id button_resend_email
 id button_sign_in
 id cancel_action
@@ -1342,6 +1343,7 @@ id enterAlwaysCollapsed
 id exitUntilCollapsed
 id expand_activities_button
 id expanded_menu
+id file_name_pdf
 id fill
 id fill_horizontal
 id fill_vertical
@@ -1424,6 +1426,7 @@ id parentPanel
 id parent_matrix
 id password
 id password_layout
+id pdf_image
 id percent
 id phone_button
 id phone_layout
@@ -1676,6 +1679,7 @@ layout notification_template_media
 layout notification_template_media_custom
 layout notification_template_part_chronometer
 layout notification_template_part_time
+layout pdf_view_layout
 layout select_dialog_item_material
 layout select_dialog_multichoice_material
 layout select_dialog_singlechoice_material
@@ -2513,3 +2517,4 @@ styleable Toolbar android_gravity android_minHeight buttonGravity collapseConten
 styleable View android_theme android_focusable paddingEnd paddingStart theme
 styleable ViewBackgroundHelper android_background backgroundTint backgroundTintMode
 styleable ViewStubCompat android_id android_layout android_inflatedId
+xml file_paths

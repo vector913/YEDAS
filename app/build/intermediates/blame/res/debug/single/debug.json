@@ -1120,6 +1120,10 @@
         "source": "C:\\Users\\user\\.gradle\\caches\\transforms-2\\files-2.1\\9351b617e3f0a3b93cfd4b50cff79a94\\jetified-firebase-ui-auth-4.3.1\\res\\layout\\fui_welcome_back_email_link_prompt_layout.xml"
     },
     {
+        "merged": "C:\\Users\\user\\AndroidStudioProjects\\YEDAS\\app\\build\\intermediates\\res\\merged\\debug\\layout_pdf_view_layout.xml.flat",
+        "source": "C:\\Users\\user\\AndroidStudioProjects\\YEDAS\\app\\src\\main\\res\\layout\\pdf_view_layout.xml"
+    },
+    {
         "merged": "C:\\Users\\user\\AndroidStudioProjects\\YEDAS\\app\\build\\intermediates\\res\\merged\\debug\\drawable_abc_seekbar_thumb_material.xml.flat",
         "source": "C:\\Users\\user\\.gradle\\caches\\transforms-2\\files-2.1\\383837a1f189d10df3511e6927171459\\appcompat-1.1.0\\res\\drawable\\abc_seekbar_thumb_material.xml"
     },
@@ -1210,6 +1214,10 @@
     {
         "merged": "C:\\Users\\user\\AndroidStudioProjects\\YEDAS\\app\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4_abc_list_focused_holo.9.png.flat",
         "source": "C:\\Users\\user\\.gradle\\caches\\transforms-2\\files-2.1\\383837a1f189d10df3511e6927171459\\appcompat-1.1.0\\res\\drawable-mdpi-v4\\abc_list_focused_holo.9.png"
+    },
+    {
+        "merged": "C:\\Users\\user\\AndroidStudioProjects\\YEDAS\\app\\build\\intermediates\\res\\merged\\debug\\xml_file_paths.xml.flat",
+        "source": "C:\\Users\\user\\AndroidStudioProjects\\YEDAS\\app\\src\\main\\res\\xml\\file_paths.xml"
     },
     {
         "merged": "C:\\Users\\user\\AndroidStudioProjects\\YEDAS\\app\\build\\intermediates\\res\\merged\\debug\\drawable_abc_btn_radio_material.xml.flat",

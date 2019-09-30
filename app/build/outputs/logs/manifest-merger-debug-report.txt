@@ -1,9 +1,20 @@
 -- Merging decision tree log ---
+provider#androidx.core.content.FileProvider
+INJECTED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:12:9-20:20
+	android:grantUriPermissions
+		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:16:13-47
+	android:authorities
+		INJECTED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml
+		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:14:13-60
+	android:exported
+		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:15:13-37
+	android:name
+		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:13:13-62
 manifest
-ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:2:1-50:12
-INJECTED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:2:1-50:12
-INJECTED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:2:1-50:12
-INJECTED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:2:1-50:12
+ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:2:1-61:12
+INJECTED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:2:1-61:12
+INJECTED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:2:1-61:12
+INJECTED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:2:1-61:12
 MERGED from [com.firebaseui:firebase-ui-auth:4.3.1] C:\Users\user\.gradle\caches\transforms-2\files-2.1\9351b617e3f0a3b93cfd4b50cff79a94\jetified-firebase-ui-auth-4.3.1\AndroidManifest.xml:2:1-109:12
 MERGED from [com.google.android.material:material:1.0.0] C:\Users\user\.gradle\caches\transforms-2\files-2.1\314e78ee411997f535ea385b0dca3a47\material-1.0.0\AndroidManifest.xml:17:1-24:12
 MERGED from [me.zhanghai.android.materialprogressbar:library:1.4.2] C:\Users\user\.gradle\caches\transforms-2\files-2.1\7410e85953529ca0c8da131981cd0725\jetified-library-1.4.2\AndroidManifest.xml:6:1-16:12
@@ -75,25 +86,25 @@ MERGED from [androidx.lifecycle:lifecycle-runtime:2.1.0] C:\Users\user\.gradle\c
 MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.1.0] C:\Users\user\.gradle\caches\transforms-2\files-2.1\bde85ae55f6557b57d2583fe07d581aa\lifecycle-viewmodel-2.1.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.savedstate:savedstate:1.0.0] C:\Users\user\.gradle\caches\transforms-2\files-2.1\aaebdf12f89ffa22d526c59842f63ce2\savedstate-1.0.0\AndroidManifest.xml:17:1-24:12
 MERGED from [com.google.firebase:firebase-database-collection:17.0.0] C:\Users\user\.gradle\caches\transforms-2\files-2.1\8e5501d68d01dce42031dc1b525c12ab\firebase-database-collection-17.0.0\AndroidManifest.xml:2:1-7:12
-INJECTED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:2:1-50:12
-INJECTED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:2:1-50:12
-INJECTED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:2:1-50:12
+INJECTED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:2:1-61:12
+INJECTED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:2:1-61:12
+INJECTED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:2:1-61:12
 	package
 		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:3:5-32
 		INJECTED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml
 		INJECTED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml
 	android:versionName
 		INJECTED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml
-		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:2:1-50:12
+		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:2:1-61:12
 		INJECTED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml
 	android:versionCode
 		INJECTED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml
-		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:2:1-50:12
+		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:2:1-61:12
 		INJECTED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml
 	xmlns:android
 		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:2:11-69
 application
-ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:5:5-46:19
+ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:5:5-57:19
 MERGED from [com.firebaseui:firebase-ui-auth:4.3.1] C:\Users\user\.gradle\caches\transforms-2\files-2.1\9351b617e3f0a3b93cfd4b50cff79a94\jetified-firebase-ui-auth-4.3.1\AndroidManifest.xml:15:5-107:19
 MERGED from [com.firebaseui:firebase-ui-auth:4.3.1] C:\Users\user\.gradle\caches\transforms-2\files-2.1\9351b617e3f0a3b93cfd4b50cff79a94\jetified-firebase-ui-auth-4.3.1\AndroidManifest.xml:15:5-107:19
 MERGED from [com.google.android.material:material:1.0.0] C:\Users\user\.gradle\caches\transforms-2\files-2.1\314e78ee411997f535ea385b0dca3a47\material-1.0.0\AndroidManifest.xml:22:5-20
@@ -169,79 +180,85 @@ MERGED from [androidx.lifecycle:lifecycle-process:2.0.0] C:\Users\user\.gradle\c
 	android:theme
 		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:11:9-40
 activity#com.example.yedas.LoadingScreenActivity
-ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:13:9-18:40
+ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:21:9-26:40
 	android:name
-		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:14:13-49
+		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:22:13-49
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:15:13-18:29
+ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:23:13-26:29
 action#android.intent.action.MAIN
-ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:16:17-69
+ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:24:17-69
 	android:name
-		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:16:25-66
+		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:24:25-66
 category#android.intent.category.LAUNCHER
-ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:17:17-77
+ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:25:17-77
 	android:name
-		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:17:27-74
+		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:25:27-74
 activity#com.example.yedas.MainActivity
-ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:19:9-23:20
-	android:label
-		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:21:13-45
-	android:theme
-		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:22:13-56
-	android:name
-		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:20:13-41
-activity#com.example.yedas.LoginActivity
-ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:24:9-26:57
-	android:label
-		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:26:13-45
-	android:name
-		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:25:13-42
-activity#com.example.yedas.MainViewActivity
-ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:27:9-29:57
+ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:27:9-31:20
 	android:label
 		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:29:13-45
+	android:theme
+		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:30:13-56
 	android:name
-		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:28:13-45
-activity#com.example.yedas.NewPassActivity
-ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:30:9-32:57
+		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:28:13-41
+activity#com.example.yedas.PdfViewActivity
+ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:32:9-34:57
 	android:label
-		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:32:13-45
-	android:name
-		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:31:13-44
-activity#com.example.yedas.DrawSignActivity
-ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:33:9-35:57
-	android:label
-		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:35:13-45
-	android:name
 		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:34:13-45
+	android:name
+		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:33:13-43
+activity#com.example.yedas.LoginActivity
+ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:35:9-37:57
+	android:label
+		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:37:13-45
+	android:name
+		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:36:13-42
+activity#com.example.yedas.MainViewActivity
+ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:38:9-40:57
+	android:label
+		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:40:13-45
+	android:name
+		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:39:13-45
+activity#com.example.yedas.NewPassActivity
+ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:41:9-43:57
+	android:label
+		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:43:13-45
+	android:name
+		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:42:13-44
+activity#com.example.yedas.DrawSignActivity
+ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:44:9-46:57
+	android:label
+		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:46:13-45
+	android:name
+		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:45:13-45
 activity#com.example.yedas.UserInfoChangeActivity
-ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:36:9-38:57
+ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:47:9-49:57
 	android:label
-		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:38:13-45
+		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:49:13-45
 	android:name
-		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:37:13-51
+		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:48:13-51
 activity#com.example.yedas.DocumentViewActivity
-ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:39:9-45:20
+ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:50:9-56:20
 	android:label
-		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:41:13-45
+		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:52:13-45
 	android:name
-		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:40:13-49
+		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:51:13-49
 meta-data#android.support.PARENT_ACTIVITY
-ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:42:13-44:53
+ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:53:13-55:53
 	android:value
-		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:44:17-50
+		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:55:17-50
 	android:name
-		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:43:17-63
+		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:54:17-63
 uses-permission#android.permission.READ_EXTERNAL_STORAGE
-ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:47:5-80
+ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:58:5-80
 	android:name
-		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:47:22-77
+		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:58:22-77
 uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
-ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:48:5-81
+ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:59:5-81
 	android:name
-		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:48:22-78
+		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:59:22-78
 uses-permission#android.permission.INTERNET
-ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:49:5-66
+ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:60:5-66
 MERGED from [com.firebaseui:firebase-ui-auth:4.3.1] C:\Users\user\.gradle\caches\transforms-2\files-2.1\9351b617e3f0a3b93cfd4b50cff79a94\jetified-firebase-ui-auth-4.3.1\AndroidManifest.xml:13:5-67
 MERGED from [com.firebaseui:firebase-ui-auth:4.3.1] C:\Users\user\.gradle\caches\transforms-2\files-2.1\9351b617e3f0a3b93cfd4b50cff79a94\jetified-firebase-ui-auth-4.3.1\AndroidManifest.xml:13:5-67
 MERGED from [com.google.firebase:firebase-database:19.1.0] C:\Users\user\.gradle\caches\transforms-2\files-2.1\6af11f8db37b6f67e4facceafdc70b3d\firebase-database-19.1.0\AndroidManifest.xml:26:5-67
@@ -259,7 +276,7 @@ MERGED from [com.google.android.gms:play-services-measurement-impl:17.2.0] C:\Us
 MERGED from [com.google.android.gms:play-services-measurement-sdk-api:17.2.0] C:\Users\user\.gradle\caches\transforms-2\files-2.1\e55b21d1a143234c075f5c2b639fdcab\play-services-measurement-sdk-api-17.2.0\AndroidManifest.xml:23:5-67
 MERGED from [com.google.android.gms:play-services-measurement-sdk-api:17.2.0] C:\Users\user\.gradle\caches\transforms-2\files-2.1\e55b21d1a143234c075f5c2b639fdcab\play-services-measurement-sdk-api-17.2.0\AndroidManifest.xml:23:5-67
 	android:name
-		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:49:22-64
+		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:60:22-64
 uses-sdk
 INJECTED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml
@@ -416,6 +433,12 @@ INJECTED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidMani
 		INJECTED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml
 		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml
 		INJECTED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml
+meta-data#android.support.FILE_PROVIDER_PATHS
+ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:17:13-19:54
+	android:resource
+		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:19:17-51
+	android:name
+		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:18:17-67
 uses-permission#android.permission.ACCESS_NETWORK_STATE
 ADDED from [com.firebaseui:firebase-ui-auth:4.3.1] C:\Users\user\.gradle\caches\transforms-2\files-2.1\9351b617e3f0a3b93cfd4b50cff79a94\jetified-firebase-ui-auth-4.3.1\AndroidManifest.xml:12:5-79
 MERGED from [com.google.firebase:firebase-database:19.1.0] C:\Users\user\.gradle\caches\transforms-2\files-2.1\6af11f8db37b6f67e4facceafdc70b3d\firebase-database-19.1.0\AndroidManifest.xml:25:5-79

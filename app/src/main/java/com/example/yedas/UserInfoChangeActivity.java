@@ -18,6 +18,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class UserInfoChangeActivity extends AppCompatActivity {
+
     EditText input_name;
     TextView verif_t;
     Spinner  dept, job;

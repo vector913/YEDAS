@@ -54,6 +54,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainViewActivity" />
         </activity>
+        <activity android:name="JoinActivity"/>
     </application>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />

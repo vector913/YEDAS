@@ -1383,6 +1383,13 @@ id invisible_frame
 id italic
 id item_touch_helper_previous_elevation
 id itemtext
+id join_cancel_btn
+id join_change_btn
+id join_descriptor
+id join_input_dept
+id join_input_job
+id join_input_name
+id join_verification
 id labeled
 id largeLabel
 id left
@@ -1656,6 +1663,7 @@ layout fui_register_email_layout
 layout fui_welcome_back_email_link_prompt_layout
 layout fui_welcome_back_idp_prompt_layout
 layout fui_welcome_back_password_prompt_layout
+layout join_activity
 layout list_view
 layout loading_activity
 layout login_activity

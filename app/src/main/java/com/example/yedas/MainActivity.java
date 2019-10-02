@@ -3,6 +3,7 @@ package com.example.yedas;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -23,6 +24,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.io.File;
 
 
 public class MainActivity extends AppCompatActivity{
@@ -32,8 +37,12 @@ public class MainActivity extends AppCompatActivity{
     private FirebaseAuth.AuthStateListener  authStateListener;
     private DatabaseReference mDatabase;
     private DatabaseReference myRef;
+    private DatabaseReference fDatabase;
+    private DatabaseReference fRef;
     String names, emaisl, depts,jobs;
-
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+    StorageReference mStorageRef = storage.getReferenceFromUrl("gs://yedas-e5423.appspot.com");
+    StorageReference pathReference;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -132,6 +141,19 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 if(user!=null){
+                    // 현재 파이어베이스에서 Cloud folder delete 지원 안함
+//                    pathReference = mStorageRef.child(user.getUid());
+//                    pathReference.delete();
+                    String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/YEDAS/";
+                    File root = new File(path);
+                    if(root.exists()){
+                        root.delete();
+                    }
+                    fDatabase = FirebaseDatabase.getInstance().getReference();
+                    fRef = fDatabase.child("Files").child(user.getUid());
+                    fRef.removeValue();
+                    myRef = mDatabase.child("User").child(user.getUid());
+                    myRef.removeValue();
                     user.delete()
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override

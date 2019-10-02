@@ -8,15 +8,30 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.File;
 
 public class LoadingScreenActivity extends AppCompatActivity {
     String TAG = "LoadingScreenActivity";
+
+    FirebaseAuth firebaseAuth;
+    FirebaseUser user;
+    DatabaseReference mDatabase;
+    DatabaseReference mRef;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,14 +47,45 @@ public class LoadingScreenActivity extends AppCompatActivity {
                     if(!root.exists()){
                         root.mkdirs();
                     }
-                    startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-                    finish();
+                    firebaseAuth = FirebaseAuth.getInstance();
+                    if(firebaseAuth.getCurrentUser()!=null&&firebaseAuth.getCurrentUser().isEmailVerified()){
+                        Toast.makeText(getApplicationContext(),"아이디 확인! 자동 로그인중입니다.",Toast.LENGTH_SHORT).show();
+                        user = FirebaseAuth.getInstance().getCurrentUser();
+                        mDatabase = FirebaseDatabase.getInstance().getReference();
+                        mRef = mDatabase.child("User");
+                        mRef.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                User userd = dataSnapshot.child(user.getUid()).getValue(User.class);
+                                try {
+                                    String name = userd.getUsername();
+                                    if(name!=null) {
+                                        startActivity(new Intent(getApplicationContext(), MainViewActivity.class));
+                                        Log.d(TAG, "LogInWithEmail:success");
+                                        finish();
+                                    }
+                                }catch(NullPointerException e){
+                                    Log.d(TAG, "error : "+e);
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+
+                    }else{
+                        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                        finish();
+                    }
+
                 }catch(Exception e){
                     e.printStackTrace();
                 }
 
             }
-        }, 2000);
+        }, 1500);
     }
     public  boolean isPermissionGranted(){
         if (Build.VERSION.SDK_INT >= 23) {

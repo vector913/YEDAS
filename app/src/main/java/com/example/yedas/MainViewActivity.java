@@ -103,24 +103,18 @@ public class MainViewActivity extends AppCompatActivity implements NavigationVie
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     for(DataSnapshot ds : dataSnapshot.child(user.getUid()).getChildren()) {
                         Document doc = ds.getValue(Document.class);
-                        if (ds != null) {
-                            assert doc != null;
-                            filename = doc.getfile();
-                            sender = doc.getSender();
-                            if (sender.equals("")) {
-                                sender = "Is empty";
-                            }
-                            type = doc.getType();
-                            date = doc.getDate();
-                        } else {
-                            filename = "파일이 전송된 것이 없습니다.";
-                            sender = " ";
-                            data.add(new ListViewitem(filename,sender));
-                            break;
-                        }
+                        filename = doc.getfile();
+                        sender = doc.getSender();
+                        type = doc.getType();
+                        date = doc.getDate();
 
                         ListViewitem u = new ListViewitem(filename, sender);
                         data.add(u);
+                    }
+                    if(data.isEmpty()){
+                        filename = "파일이 전송된 것이 없습니다.";
+                        sender = " ";
+                        data.add(new ListViewitem(filename,sender));
                     }
                     listView.setAdapter(adapter);
                 }

@@ -72,8 +72,16 @@ public class DocumentViewActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
         final FirebaseUser user  = firebaseAuth.getCurrentUser();
+        doc_date.setText(getIntent().getStringExtra("doc_date"));
+        doc_id.setText(getIntent().getStringExtra("doc_dat"));
+        doc_sender.setText(getIntent().getStringExtra("writer_dat"));
+        type = getIntent().getStringExtra("type");
+        filename = getIntent().getStringExtra("doc_dat")+"."+type;
+        tmp = getIntent().getStringExtra("doc_dat");
+        doc_file_name.setText(filename);
+        assert user != null;
 
-
+        pathReference = mStorageRef.child(user.getUid()).child(filename);
         confirm_b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -158,15 +166,7 @@ public class DocumentViewActivity extends AppCompatActivity {
             }
         });
 
-        doc_date.setText(getIntent().getStringExtra("doc_date"));
-        doc_id.setText(getIntent().getStringExtra("doc_dat"));
-        doc_sender.setText(getIntent().getStringExtra("writer_dat"));
-        type = getIntent().getStringExtra("type");
-        filename = getIntent().getStringExtra("doc_dat")+"."+type;
-        tmp = getIntent().getStringExtra("doc_dat");
-        doc_file_name.setText(filename);
-        assert user != null;
-        pathReference = mStorageRef.child(user.getUid()).child(filename);
+
         doc_file_name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -74,6 +74,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainViewActivity" />
         </activity>
+        <activity android:name="com.example.yedas.JoinActivity" />
 
         <meta-data
             android:name="com.google.android.gms.version"

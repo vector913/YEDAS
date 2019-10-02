@@ -2012,6 +2012,10 @@
         "source": "C:\\Users\\user\\.gradle\\caches\\transforms-2\\files-2.1\\922d0a7a738b37f00ad7e7b4cbbdb0f3\\appcompat-resources-1.1.0\\res\\drawable\\abc_vector_test.xml"
     },
     {
+        "merged": "C:\\Users\\user\\AndroidStudioProjects\\YEDAS\\app\\build\\intermediates\\res\\merged\\debug\\layout_join_activity.xml.flat",
+        "source": "C:\\Users\\user\\AndroidStudioProjects\\YEDAS\\app\\src\\main\\res\\layout\\join_activity.xml"
+    },
+    {
         "merged": "C:\\Users\\user\\AndroidStudioProjects\\YEDAS\\app\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4_abc_ic_menu_selectall_mtrl_alpha.png.flat",
         "source": "C:\\Users\\user\\.gradle\\caches\\transforms-2\\files-2.1\\383837a1f189d10df3511e6927171459\\appcompat-1.1.0\\res\\drawable-mdpi-v4\\abc_ic_menu_selectall_mtrl_alpha.png"
     },

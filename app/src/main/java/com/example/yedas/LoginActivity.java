@@ -25,6 +25,11 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
@@ -33,11 +38,13 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     TextView newPassButton;
     private static final int RC_SIGN_IN = 9001;
     private static String TAG = "LoginActivity";
-    private SignInButton signInButton;
+    private SignInButton gsignInButton;
+
     FirebaseAuth firebaseAuth;
     FirebaseUser user;
     GoogleApiClient mGoogleApiClient;
-
+    DatabaseReference mDatabase;
+    DatabaseReference mRef;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +53,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         loginPassword =  findViewById(R.id.login_pswd);
         loginButton =  findViewById(R.id.login_btn);
         registerButton =  findViewById(R.id.register_btn);
-        signInButton = findViewById(R.id.gsign_in_button);
+        gsignInButton = findViewById(R.id.gsign_in_button);
         newPassButton = findViewById(R.id.find_pswd);
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -75,12 +82,23 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                     Log.d(TAG, "signInWithEmail:sendVerification");
                                     user = FirebaseAuth.getInstance().getCurrentUser();
                                     user.sendEmailVerification();
-                                    Toast.makeText(getApplicationContext(),"해당 이메일로 인증내용이 전송되었습니다. \n승인을 하신후 로그인해주세요.",Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getApplicationContext(),"해당 이메일로 인증내용이 전송되었습니다. \n승인을 하신후 계속 진행해주세요",Toast.LENGTH_LONG).show();
                                     //startActivity(new Intent(getApplicationContext(), MainViewActivity.class));
                                     //finish();
                                 }
                                 else{
-                                    Toast.makeText(getApplicationContext(),"이미 등록된 유저입니다.",Toast.LENGTH_SHORT).show();
+                                    user = FirebaseAuth.getInstance().getCurrentUser();
+                                    if(user==null){
+                                        Toast.makeText(getApplicationContext(),"오류 발견 관리자에게 문의해주세요!!",Toast.LENGTH_LONG).show();
+                                        startActivity(new Intent(getApplicationContext(),LoadingScreenActivity.class));
+                                        finish();
+                                    }else if(user.isEmailVerified()) {
+                                        startActivity(new Intent(getApplicationContext(), JoinActivity.class));
+                                        finish();
+                                    }else{
+                                        Toast.makeText(getApplicationContext(),"이메일 인증을 진행해주세요.",Toast.LENGTH_SHORT).show();
+                                    }
+
                                 }
                             }
                         });
@@ -116,24 +134,39 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 user = FirebaseAuth.getInstance().getCurrentUser();
+
                                 if (task.isSuccessful()&&user.isEmailVerified()) {
-                                    Log.d(TAG, "LogInWithEmail:success");
-                                    startActivity(new Intent(getApplicationContext(), MainViewActivity.class));
-                                    finish();
-                                } else {
+                                    mDatabase = FirebaseDatabase.getInstance().getReference();
+                                    mRef = mDatabase.child("User");
+                                    mRef.addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            User userd = dataSnapshot.child(user.getUid()).getValue(User.class);
+                                            try {
+                                                String name = userd.getUsername();
+                                                if(name!=null) {
+                                                    startActivity(new Intent(getApplicationContext(), MainViewActivity.class));
+                                                    Log.d(TAG, "LogInWithEmail:success");
+                                                    finish();
+                                                }
+                                            }catch(NullPointerException e){
+                                                Toast.makeText(getApplicationContext(), "회원가입버튼을 클릭하여 계속 진행하여주세요.", Toast.LENGTH_SHORT).show();
+                                                Log.d(TAG, "error : "+e);
+                                            }
+
+                                        }
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {}
+                                });
+                                }else if((task.isSuccessful()&&!user.isEmailVerified()) ) {
+                                    Toast.makeText(getApplicationContext(), "이메일 인증 후\n회원가입 버튼을 눌러 사용자 등록을 진행해주세요.", Toast.LENGTH_SHORT).show();
+                                }else {
                                     Toast.makeText(getApplicationContext(), "E-mail 이나 비밀번호가 틀립니다.", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
             }
         });
-
-
-        if(firebaseAuth.getCurrentUser()!=null){
-            startActivity(new Intent(getApplicationContext(), MainViewActivity.class));
-            finish();
-        }
-
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -145,17 +178,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 .addApi(Auth.GOOGLE_SIGN_IN_API,gso)
                 .build();
 
-        signInButton.setOnClickListener(new View.OnClickListener() {
+        gsignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 signIn();
             }
         });
-
-        if(firebaseAuth.getCurrentUser()!=null){
-            startActivity(new Intent(getApplicationContext(), MainViewActivity.class));
-            finish();
-        }
 
     }
 
@@ -182,7 +210,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
-                    startActivity(new Intent(getApplicationContext(), MainViewActivity.class));
+                    startActivity(new Intent(getApplicationContext(), JoinActivity.class));
                     finish();
                 }
                 else{

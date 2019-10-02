@@ -3,23 +3,27 @@ package com.example.yedas;
 import java.util.Date;
 
 public class Document {
-    public String filename;
-    public String sender;
-    public String type;
-    public String date;
+    private String filename;
+    private String sender;
+    private String type;
+    private String date;
+    private String descript; // 설명
+    private int decision; // 결정 -1 : 대기 , 0 : 거절 , 1 : 승인
 
-    public Document(String file, String sender,String type, String date){
+    public Document(String file, String sender, String type, String date, String descript, int decision){
+        this.date = date;
+        this.decision = decision;
+        this.descript = descript;
         this.filename = file;
         this.sender = sender;
         this.type = type;
-        this.date = date;
     }
-    public String getfile() {
+    public String getfilename() {
         return filename;
     }
 
-    public void setfile(String docname) {
-        this.filename = docname;
+    public void setfilename(String filename) {
+        this.filename = filename;
     }
 
     public String getSender() {
@@ -46,8 +50,21 @@ public class Document {
         this.date = date;
     }
 
+    public String getDescript() {
+        return descript;
+    }
+
+    public int getDecision() {
+        return decision;
+    }
     public Document(){
      //default constructor
     }
+    public void setDescription(String descript) {
+        this.descript = descript;
+    }
 
+    public void setDecision(int decision) {
+        this.decision = decision;
+    }
 }

@@ -12,7 +12,6 @@ import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.AttributeSet;
@@ -32,6 +31,11 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -40,7 +44,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 
-public class DrawSignActivity  extends AppCompatActivity {
+public class ApprovalActivity extends AppCompatActivity {
     private Button btnClear, btnSave, btnCancel ,btnBack;
     private File file;
     private LinearLayout canvasLL;
@@ -51,12 +55,17 @@ public class DrawSignActivity  extends AppCompatActivity {
     // Creating Separate Directory for saving Generated Images
     String DIRECTORY = Environment.getExternalStorageDirectory().getPath() + "/YEDAS/";
     String pic_name;
+    String descript;
     String StoredPath;
+    String tmp;
+    private DatabaseReference fDatabase;
+    private DatabaseReference fRef;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.draw_signature_activity);
+        setContentView(R.layout.approval_activity);
 
         pic_name = getIntent().getStringExtra("filename");
         StoredPath = DIRECTORY + pic_name + ".png";
@@ -74,7 +83,9 @@ public class DrawSignActivity  extends AppCompatActivity {
         btnSave = findViewById(R.id.send_confirm);
         btnBack = findViewById(R.id.send_re_check);
         btnCancel = findViewById(R.id.send_decline);
-
+        fDatabase = FirebaseDatabase.getInstance().getReference();
+        fRef = fDatabase.child("Files");
+        tmp = getIntent().getStringExtra("filename");
         view = canvasLL;
 
         btnClear.setOnClickListener(new View.OnClickListener() {
@@ -90,11 +101,29 @@ public class DrawSignActivity  extends AppCompatActivity {
                 view.setDrawingCacheEnabled(true);
                 mSignature.save(view,StoredPath);
                 FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-                FirebaseUser user = firebaseAuth.getCurrentUser();
+                final FirebaseUser user = firebaseAuth.getCurrentUser();
                 FirebaseStorage storage = FirebaseStorage.getInstance();
                 StorageReference storageReference = storage.getReferenceFromUrl("gs://yedas-e5423.appspot.com");
                 StorageReference mountimg = storageReference.child(user.getUid()).child(pic_name+".png");
                 try {
+                    fRef.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for(DataSnapshot ds : dataSnapshot.child(user.getUid()).getChildren()) {
+                                Document doc = ds.getValue(Document.class);
+                                assert doc != null;
+                                if(doc.getfilename().equals(tmp)){
+                                   fRef = ds.getRef();
+                                   break;
+                                }
+                                fRef.child("decision").setValue(1);
+                            }
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
                     bitmap.compress(Bitmap.CompressFormat.PNG,100,stream);
                     byte[] bytef = stream.toByteArray();
@@ -103,12 +132,13 @@ public class DrawSignActivity  extends AppCompatActivity {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             Toast.makeText(getApplicationContext(),"승인전송이 거부 되었습니다.\n관리자에게 문의하세요!",Toast.LENGTH_SHORT).show();
-                            finish();
+
                         }
                     }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             Toast.makeText(getApplicationContext(),"결재가 승인되었습니다.",Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(getApplicationContext(),MainViewActivity.class));
                             finish();
                         }
                     });
@@ -121,7 +151,7 @@ public class DrawSignActivity  extends AppCompatActivity {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AlertDialog.Builder(DrawSignActivity.this)
+                new AlertDialog.Builder(ApprovalActivity.this)
                         .setTitle("결재 서류창 종료")
                         .setMessage("결재 없이 종료 하시겠습니까?")
                         .setNegativeButton(android.R.string.no, null)
@@ -137,10 +167,60 @@ public class DrawSignActivity  extends AppCompatActivity {
         });
 
         btnCancel.setOnClickListener(new View.OnClickListener() {
+            final String[] items = {"내용 오류", "오타 발견", "내용 수정 요청", "기타 사유"};
+
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "결재를 거절하였습니다.\n기능생성중 ",Toast.LENGTH_SHORT).show();
-                finish();
+                new AlertDialog.Builder(ApprovalActivity.this)
+                        .setTitle("결재 거절 사유")
+                        .setIcon(R.drawable.ic_menu_manage)
+                        .setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int item) {
+                                descript = items[item];
+                                if(descript.equals("기타 사유")){
+                                    Toast.makeText(getApplicationContext(),"해당 사유는 결재작성자에게 따로 전달해주세요.", Toast.LENGTH_SHORT).show();
+                                }
+                                //Toast.makeText(getApplicationContext(), items[item], Toast.LENGTH_SHORT).show();
+                            }
+                        }).setPositiveButton("거절 사유 전송",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+                                final FirebaseUser user = firebaseAuth.getCurrentUser();
+                                fRef.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        for(DataSnapshot ds : dataSnapshot.child(user.getUid()).getChildren()) {
+                                            Document doc = ds.getValue(Document.class);
+                                            assert doc != null;
+                                            if(doc.getfilename().equals(tmp)){
+                                               fRef = ds.getRef();
+                                                break;
+                                            }
+                                        }
+                                        fRef.child("decision").setValue(0);
+                                        fRef.getRef().child("descript").setValue(descript);
+                                        startActivity(new Intent(getApplicationContext(),MainViewActivity.class));
+                                        finish();
+                                    }
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
+                               // Toast.makeText(ApprovalActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                            }
+                        }).setNegativeButton("취소",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                Toast.makeText(ApprovalActivity.this,"다시 결정해주세요",Toast.LENGTH_SHORT).show();
+                            }
+                        }).create().show();
+
+
+
+                //Toast.makeText(getApplicationContext(), "결재를 거절하였습니다.\n기능생성중 ",Toast.LENGTH_SHORT).show();
+
             }
         });
 
@@ -274,5 +354,20 @@ public class DrawSignActivity  extends AppCompatActivity {
             dirtyRect.top = Math.min(lastTouchY, eventY);
             dirtyRect.bottom = Math.max(lastTouchY, eventY);
         }
+    }
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this)
+                .setTitle("문서종료")
+                .setMessage("결재 없이 처음으로 가시겠습니까?")
+                .setNegativeButton(android.R.string.no, null)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        ApprovalActivity.super.onBackPressed();
+                        startActivity(new Intent(ApprovalActivity.this,MainViewActivity.class));
+                        Toast.makeText(getApplicationContext(),"결재가 취소되었습니다.",Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                }).create().show();
     }
 }

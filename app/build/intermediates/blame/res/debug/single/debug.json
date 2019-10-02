@@ -928,6 +928,10 @@
         "source": "C:\\Users\\user\\.gradle\\caches\\transforms-2\\files-2.1\\383837a1f189d10df3511e6927171459\\appcompat-1.1.0\\res\\drawable-xxhdpi-v4\\abc_ic_star_black_48dp.png"
     },
     {
+        "merged": "C:\\Users\\user\\AndroidStudioProjects\\YEDAS\\app\\build\\intermediates\\res\\merged\\debug\\layout_approval_activity.xml.flat",
+        "source": "C:\\Users\\user\\AndroidStudioProjects\\YEDAS\\app\\src\\main\\res\\layout\\approval_activity.xml"
+    },
+    {
         "merged": "C:\\Users\\user\\AndroidStudioProjects\\YEDAS\\app\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4_notify_panel_notification_icon_bg.png.flat",
         "source": "C:\\Users\\user\\.gradle\\caches\\transforms-2\\files-2.1\\0136ca65841c199e13145e51c5d77d51\\core-1.1.0\\res\\drawable-mdpi-v4\\notify_panel_notification_icon_bg.png"
     },
@@ -2406,10 +2410,6 @@
     {
         "merged": "C:\\Users\\user\\AndroidStudioProjects\\YEDAS\\app\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4_abc_textfield_default_mtrl_alpha.9.png.flat",
         "source": "C:\\Users\\user\\.gradle\\caches\\transforms-2\\files-2.1\\383837a1f189d10df3511e6927171459\\appcompat-1.1.0\\res\\drawable-mdpi-v4\\abc_textfield_default_mtrl_alpha.9.png"
-    },
-    {
-        "merged": "C:\\Users\\user\\AndroidStudioProjects\\YEDAS\\app\\build\\intermediates\\res\\merged\\debug\\layout_draw_signature_activity.xml.flat",
-        "source": "C:\\Users\\user\\AndroidStudioProjects\\YEDAS\\app\\src\\main\\res\\layout\\draw_signature_activity.xml"
     },
     {
         "merged": "C:\\Users\\user\\AndroidStudioProjects\\YEDAS\\app\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi-v4_abc_btn_switch_to_on_mtrl_00012.9.png.flat",

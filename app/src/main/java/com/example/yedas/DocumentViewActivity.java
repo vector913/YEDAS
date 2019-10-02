@@ -1,39 +1,35 @@
 package com.example.yedas;
 
 import android.app.ProgressDialog;
-import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.pdf.PdfRenderer;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
 import android.view.View;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
 import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.core.utilities.Utilities;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.internal.Util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -51,8 +47,11 @@ public class DocumentViewActivity extends AppCompatActivity {
 
     FirebaseAuth firebaseAuth;
     String filename,type,tmp;
+    int decision;
     ArrayList<Bitmap> bitmap;
-
+    private DatabaseReference fDatabase;
+    private DatabaseReference fRef;
+    private DatabaseReference tRef;
     FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference mStorageRef = storage.getReferenceFromUrl("gs://yedas-e5423.appspot.com");
     StorageReference pathReference;
@@ -75,11 +74,37 @@ public class DocumentViewActivity extends AppCompatActivity {
         doc_date.setText(getIntent().getStringExtra("doc_date"));
         doc_id.setText(getIntent().getStringExtra("doc_dat"));
         doc_sender.setText(getIntent().getStringExtra("writer_dat"));
+        doc_descript.setText(getIntent().getStringExtra("decryption"));
         type = getIntent().getStringExtra("type");
         filename = getIntent().getStringExtra("doc_dat")+"."+type;
         tmp = getIntent().getStringExtra("doc_dat");
         doc_file_name.setText(filename);
+        decision = getIntent().getIntExtra("decision",-2);
         assert user != null;
+        fDatabase = FirebaseDatabase.getInstance().getReference();
+        fRef = fDatabase.child("Files");
+
+        if(decision==-2) {
+            fRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot ds : dataSnapshot.child(user.getUid()).getChildren()) {
+                        Document doc = ds.getValue(Document.class);
+                        assert doc != null;
+                        if (doc.getfilename().equals(tmp)) {
+                            tRef = ds.getRef();
+                            tRef.child("decision").setValue(decision);
+                            break;
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
 
         pathReference = mStorageRef.child(user.getUid()).child(filename);
         confirm_b.setOnClickListener(new View.OnClickListener() {
@@ -101,7 +126,7 @@ public class DocumentViewActivity extends AppCompatActivity {
                                 Log.e("firebase ", ";local tem file created  created " + localFile.toString());
                                 try {
                                     bitmap = pdfToBitmap(localFile);
-                                    Intent intent = new Intent(getApplicationContext(), DrawSignActivity.class);
+                                    Intent intent = new Intent(getApplicationContext(), ApprovalActivity.class);
                                     Bitmap bits = bitmap.get(0);
                                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
                                     bits.compress(Bitmap.CompressFormat.PNG, 100, stream);
@@ -109,6 +134,7 @@ public class DocumentViewActivity extends AppCompatActivity {
                                     intent.putExtra("filename", tmp);
                                     intent.putExtra("Image", bytes);
                                     yourProgressDialog.dismiss();
+                                    finish();
                                     startActivity(intent);
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -137,7 +163,7 @@ public class DocumentViewActivity extends AppCompatActivity {
                     }else{
                         try {
                             bitmap = pdfToBitmap(localFile);
-                            Intent intent = new Intent(getApplicationContext(), DrawSignActivity.class);
+                            Intent intent = new Intent(getApplicationContext(), ApprovalActivity.class);
                             Bitmap bits = bitmap.get(0);
                             ByteArrayOutputStream stream = new ByteArrayOutputStream();
                             bits.compress(Bitmap.CompressFormat.PNG, 100, stream);
@@ -145,6 +171,7 @@ public class DocumentViewActivity extends AppCompatActivity {
 
                             intent.putExtra("filename", tmp);
                             intent.putExtra("Image", bytes);
+                            finish();
                             startActivity(intent);
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -161,7 +188,8 @@ public class DocumentViewActivity extends AppCompatActivity {
         decline_b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "결재가 취소 되었습니다.", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(DocumentViewActivity.this,MainViewActivity.class));
+                Toast.makeText(getApplicationContext(),"결재가 취소되었습니다.",Toast.LENGTH_SHORT).show();
                 finish();
             }
         });
@@ -229,7 +257,9 @@ public class DocumentViewActivity extends AppCompatActivity {
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface arg0, int arg1) {
                         DocumentViewActivity.super.onBackPressed();
+                        startActivity(new Intent(DocumentViewActivity.this,MainViewActivity.class));
                         Toast.makeText(getApplicationContext(),"결재가 취소되었습니다.",Toast.LENGTH_SHORT).show();
+                        finish();
                     }
                 }).create().show();
     }

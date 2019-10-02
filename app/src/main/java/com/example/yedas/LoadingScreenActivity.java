@@ -91,7 +91,8 @@ public class LoadingScreenActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= 23) {
             if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED&&
                     checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED&&
-                    checkSelfPermission(Manifest.permission.INTERNET)== PackageManager.PERMISSION_GRANTED) {
+                    checkSelfPermission(android.Manifest.permission.INTERNET)== PackageManager.PERMISSION_GRANTED&&
+            checkSelfPermission(android.Manifest.permission.RECEIVE_BOOT_COMPLETED)==PackageManager.PERMISSION_GRANTED) {
                 Log.v(TAG,"Permission is granted");
                 return true;
             } else {
@@ -100,7 +101,7 @@ public class LoadingScreenActivity extends AppCompatActivity {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET}, 1);
-
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECEIVE_BOOT_COMPLETED}, 1);
                 return false;
             }
         }

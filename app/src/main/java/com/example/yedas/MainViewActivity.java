@@ -1,12 +1,20 @@
 package com.example.yedas;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.RemoteViews;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -49,6 +57,8 @@ public class MainViewActivity extends AppCompatActivity implements NavigationVie
         String sender;
         String date;
         String type;
+        String descript;
+        int decision;
 
          ListViewAdapter adapter;
     protected void onCreate (Bundle savedInstanceState){
@@ -78,6 +88,7 @@ public class MainViewActivity extends AppCompatActivity implements NavigationVie
 
         final FirebaseUser user  = firebaseAuth.getCurrentUser();
         final ArrayList<ListViewitem> data=new ArrayList<>();
+        final ArrayList<Document> doc_obj = new ArrayList<>();
         adapter = new ListViewAdapter(this,R.layout.document_item,data);
 
         if(user!=null) {
@@ -103,18 +114,36 @@ public class MainViewActivity extends AppCompatActivity implements NavigationVie
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     for(DataSnapshot ds : dataSnapshot.child(user.getUid()).getChildren()) {
                         Document doc = ds.getValue(Document.class);
-                        filename = doc.getfile();
+                        date = doc.getDate();
+                        descript = doc.getDescript();
+                        decision = doc.getDecision();
+                        filename = doc.getfilename();
                         sender = doc.getSender();
                         type = doc.getType();
-                        date = doc.getDate();
-
+                        if(decision<0){
+                             if(decision==-2){
+                            Uri uri_sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                            Notification n = new Notification.Builder(getApplicationContext())
+                                    .setContentTitle("새 결재 파일이 도착했습니다.")
+                                    .setContentText("작성자 : "+sender+" 파일 이름 : "+filename)
+                                    .setSmallIcon(R.drawable.ic_menu_manage)
+                                    .setSound(uri_sound)
+                                    .build();
+                            NotificationManager mNotificationManager =
+                                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                            mNotificationManager.notify(0,n);
+                        }
+                        Document new_obj = new Document(filename,sender,type,date,descript,decision);
                         ListViewitem u = new ListViewitem(filename, sender);
                         data.add(u);
+                        doc_obj.add(new_obj);
+                        }
                     }
                     if(data.isEmpty()){
                         filename = "파일이 전송된 것이 없습니다.";
                         sender = " ";
                         data.add(new ListViewitem(filename,sender));
+                        filename="";
                     }
                     listView.setAdapter(adapter);
                 }
@@ -151,15 +180,27 @@ public class MainViewActivity extends AppCompatActivity implements NavigationVie
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Intent doclist = new Intent(getApplicationContext(), DocumentViewActivity.class);
-            String Doc = adapter.getDocname(position);
-            String Writer = adapter.getWritername(position);
+            if(filename.equals("")||doc_obj.isEmpty()){
+                    Toast.makeText(getApplicationContext(),"접근할 파일이 존재하지 않습니다.",Toast.LENGTH_SHORT).show();
+            }else {
+            filename = doc_obj.get(position).getfilename();
+            date =doc_obj.get(position).getDate();
+            sender=doc_obj.get(position).getSender();
+            type =doc_obj.get(position).getType();
+            descript =doc_obj.get(position).getDescript();
+
             doclist.putExtra("file_name",filename);
             doclist.putExtra("doc_date",date);
-            doclist.putExtra("doc_dat",Doc);
-            doclist.putExtra("writer_dat",Writer);
+            doclist.putExtra("doc_dat",filename);
+            doclist.putExtra("writer_dat",sender);
             doclist.putExtra("type",type);
-            startActivity(doclist);
-            finish();
+            doclist.putExtra("decryption",descript);
+            decision = -1;
+            doclist.putExtra("decision",decision);
+
+                startActivity(doclist);
+                finish();
+            }
             }
         });
        // listView.setAdapter(adapter);

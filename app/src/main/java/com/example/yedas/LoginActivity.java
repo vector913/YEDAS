@@ -210,7 +210,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
-                    startActivity(new Intent(getApplicationContext(), JoinActivity.class));
+                    startActivity(new Intent(getApplicationContext(), MainViewActivity.class));
                     finish();
                 }
                 else{

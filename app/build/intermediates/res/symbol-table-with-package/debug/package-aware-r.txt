@@ -1620,6 +1620,7 @@ layout abc_search_view
 layout abc_select_dialog_material
 layout abc_tooltip
 layout app_bar_main
+layout approval_activity
 layout browser_actions_context_menu_page
 layout browser_actions_context_menu_row
 layout custom_dialog
@@ -1639,7 +1640,6 @@ layout design_navigation_menu_item
 layout design_text_input_password_icon
 layout document_item
 layout document_view
-layout draw_signature_activity
 layout fui_activity_invisible
 layout fui_activity_register_email
 layout fui_activity_register_phone

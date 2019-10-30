@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.yedas.test" >
+    package="com.jandjdevlps.yedas.test" >
 
     <uses-sdk
         android:minSdkVersion="22"
@@ -10,8 +10,8 @@
         android:name="androidx.test.runner.AndroidJUnitRunner"
         android:functionalTest="false"
         android:handleProfiling="false"
-        android:label="Tests for com.example.yedas"
-        android:targetPackage="com.example.yedas" />
+        android:label="Tests for com.jandjdevlps.yedas"
+        android:targetPackage="com.jandjdevlps.yedas" />
 
     <application android:debuggable="true" >
         <uses-library android:name="android.test.runner" />

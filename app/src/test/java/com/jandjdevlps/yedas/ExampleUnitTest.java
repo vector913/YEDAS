@@ -1,4 +1,4 @@
-package com.example.yedas;
+package com.jandjdevlps.yedas;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-com.example.yedas
+com.jandjdevlps.yedas
 anim abc_fade_in
 anim abc_fade_out
 anim abc_grow_fade_in_from_bottom
@@ -1188,8 +1188,10 @@ drawable notification_template_icon_low_bg
 drawable notification_tile_bg
 drawable notify_panel_notification_icon_bg
 drawable side_nav_bar
+drawable small_app_icon
 drawable tooltip_frame_dark
 drawable tooltip_frame_light
+drawable yedas_icon
 id ALT
 id CTRL
 id FUNCTION
@@ -1316,9 +1318,12 @@ id dialog_button
 id dimensions
 id direct
 id disableHome
+id divider0
 id divider1
 id divider2
 id divider3
+id divider4
+id divider5
 id document_date
 id document_descript
 id document_file_name
@@ -1387,8 +1392,11 @@ id join_cancel_btn
 id join_change_btn
 id join_descriptor
 id join_input_dept
+id join_input_email
 id join_input_job
 id join_input_name
+id join_input_pswd
+id join_input_pswdch
 id join_verification
 id labeled
 id largeLabel

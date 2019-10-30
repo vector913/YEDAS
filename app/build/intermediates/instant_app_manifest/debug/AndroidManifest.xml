@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.yedas"
+    package="com.jandjdevlps.yedas"
     android:targetSandboxVersion="2"
     android:versionCode="1"
     android:versionName="1.0" >
@@ -30,7 +30,7 @@
         android:theme="@style/AppTheme" >
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.example.yedas.provider"
+            android:authorities="com.jandjdevlps.yedas.provider"
             android:exported="false"
             android:grantUriPermissions="true" >
             <meta-data
@@ -38,7 +38,7 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name="com.example.yedas.LoadingScreenActivity" >
+        <activity android:name="com.jandjdevlps.yedas.LoadingScreenActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -46,36 +46,36 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.yedas.MainActivity"
+            android:name="com.jandjdevlps.yedas.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
         <activity
-            android:name="com.example.yedas.PdfViewActivity"
+            android:name="com.jandjdevlps.yedas.PdfViewActivity"
             android:label="@string/app_name" />
         <activity
-            android:name="com.example.yedas.LoginActivity"
+            android:name="com.jandjdevlps.yedas.LoginActivity"
             android:label="@string/app_name" />
         <activity
-            android:name="com.example.yedas.MainViewActivity"
+            android:name="com.jandjdevlps.yedas.MainViewActivity"
             android:label="@string/app_name" />
         <activity
-            android:name="com.example.yedas.NewPassActivity"
+            android:name="com.jandjdevlps.yedas.NewPassActivity"
             android:label="@string/app_name" />
         <activity
-            android:name="com.example.yedas.ApprovalActivity"
+            android:name="com.jandjdevlps.yedas.ApprovalActivity"
             android:label="@string/app_name" />
         <activity
-            android:name="com.example.yedas.UserInfoChangeActivity"
+            android:name="com.jandjdevlps.yedas.UserInfoChangeActivity"
             android:label="@string/app_name" />
         <activity
-            android:name="com.example.yedas.DocumentViewActivity"
+            android:name="com.jandjdevlps.yedas.DocumentViewActivity"
             android:label="@string/app_name" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainViewActivity" />
+                android:value="com.jandjdevlps.yedas.MainViewActivity" />
         </activity>
-        <activity android:name="com.example.yedas.JoinActivity" />
+        <activity android:name="com.jandjdevlps.yedas.JoinActivity" />
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -163,7 +163,7 @@
 
         <provider
             android:name="com.firebase.ui.auth.data.client.AuthUiInitProvider"
-            android:authorities="com.example.yedas.authuiinitprovider"
+            android:authorities="com.jandjdevlps.yedas.authuiinitprovider"
             android:exported="false"
             android:initOrder="90" />
 
@@ -231,7 +231,7 @@
 
         <provider
             android:name="com.google.firebase.provider.FirebaseInitProvider"
-            android:authorities="com.example.yedas.firebaseinitprovider"
+            android:authorities="com.jandjdevlps.yedas.firebaseinitprovider"
             android:exported="false"
             android:initOrder="100" />
 
@@ -267,7 +267,7 @@
 
         <provider
             android:name="androidx.lifecycle.ProcessLifecycleOwnerInitializer"
-            android:authorities="com.example.yedas.lifecycle-process"
+            android:authorities="com.jandjdevlps.yedas.lifecycle-process"
             android:exported="false"
             android:multiprocess="true" />
     </application>

@@ -1,20 +1,25 @@
-package com.example.yedas;
+package com.jandjdevlps.yedas;
 
 public class User {
-    public String username;
-    public String email;
-    public String department;
-    public String job;
+    private String username;
+    private String email;
+    private String department;
+    private String job;
+    private boolean isEmailVerified;
 
     public User(){
      //default constructor
     }
 
-    public User(String username, String email,String department,String job){
+    public User(String username, String email,String department,String job,Boolean isEmailVerified){
        this.username = username;
        this.email = email;
        this.department = department;
        this. job = job;
+       this.isEmailVerified = isEmailVerified;
+    }
+    public boolean isVerified() {
+        return isEmailVerified;
     }
 
     public String getEmail() {

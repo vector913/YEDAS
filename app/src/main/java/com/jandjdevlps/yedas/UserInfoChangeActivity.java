@@ -1,7 +1,8 @@
-package com.example.yedas;
+package com.jandjdevlps.yedas;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -110,10 +111,10 @@ public class UserInfoChangeActivity extends AppCompatActivity {
                     String emails = user.getEmail();
 
                     user = FirebaseAuth.getInstance().getCurrentUser();
-                    User userdat = new User(namedat,emails,deptdat,jobdat);
+                    User userdat = new User(namedat,emails,deptdat,jobdat,user.isEmailVerified());
 
                     mRef.child(user.getUid()).setValue(userdat);
-                    mRef.child(user.getUid()).child("isEmailVerified").setValue(user.isEmailVerified());
+                    //mRef.child(user.getUid()).child("isEmailVerified").setValue(user.isEmailVerified());
 
                     startActivity(set_dat);
                     Toast.makeText(getApplicationContext(),"정보수정이 완료되었습니다.",Toast.LENGTH_SHORT).show();
@@ -127,6 +128,22 @@ public class UserInfoChangeActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),"정보수정을 취소하였습니다.",Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(getApplicationContext(),MainActivity.class));
                 finish();
+            }
+        });
+
+        verif_t.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!user.isEmailVerified()) {
+                    user.sendEmailVerification();
+                    String emails = user.getEmail();
+                    String[] dat1 = emails.split("@",2);
+                    String url = dat1[1];
+                    String net = "https://www."+url;
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(net)));
+                }else{
+                    Toast.makeText(getApplicationContext(),"이미 인증되어 있습니다.",Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

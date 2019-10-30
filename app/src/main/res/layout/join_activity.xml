@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"
-        android:text="정보수정"
+        android:text="회원가입"
         android:textColor="#000000"
         android:textStyle="bold"/>
     <LinearLayout
@@ -18,7 +18,27 @@
         android:layout_height="wrap_content"
         android:layout_weight="3">
         <TextView
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
+            android:text="Email 입력"
+            android:textColor="#000000"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <EditText
+            android:id="@+id/join_input_email"
+            android:hint="이메일을 입력하세요"
+            android:inputType="textEmailAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="25"/>
+        <View
+            android:id="@+id/divider5"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#71B9F7" />
+        <TextView
+            android:layout_marginTop="10dp"
             android:text="성함"
             android:textColor="#000000"
             android:textSize="25sp"
@@ -29,6 +49,44 @@
             android:id="@+id/join_input_name"
             android:hint="성함을 입력하세요"
             android:inputType="text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="25"/>
+        <View
+            android:id="@+id/divider4"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#71B9F7" />
+        <TextView
+            android:layout_marginTop="10dp"
+            android:text="비밀번호"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <EditText
+            android:id="@+id/join_input_pswd"
+            android:hint="비밀번호"
+            android:inputType="textPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="25"/>
+        <View
+            android:id="@+id/divider0"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#71B9F7" />
+        <TextView
+            android:layout_marginTop="10dp"
+            android:text="비밀번호 재확인"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <EditText
+            android:id="@+id/join_input_pswdch"
+            android:hint="비밀번호 재확인"
+            android:inputType="textPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="25"/>

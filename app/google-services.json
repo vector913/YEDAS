@@ -8,20 +8,12 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:92537471845:android:049cab44eefcdcafcdd78c",
+        "mobilesdk_app_id": "1:92537471845:android:f997755f89d88620cdd78c",
         "android_client_info": {
-          "package_name": "com.example.yedas"
+          "package_name": "com.jandjdevlps.yedas"
         }
       },
       "oauth_client": [
-        {
-          "client_id": "92537471845-et17q55sbp6rprdrrn5pgsufgv9mrv9m.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.yedas",
-            "certificate_hash": "7755db420e68285ba8d9a1929e097a1130a27cfc"
-          }
-        },
         {
           "client_id": "92537471845-dmas8hhchukiu0fe43rus9o7o321odkn.apps.googleusercontent.com",
           "client_type": 3

@@ -1,4 +1,4 @@
-package com.example.yedas;
+package com.jandjdevlps.yedas;
 
 import android.content.Context;
 import android.content.DialogInterface;

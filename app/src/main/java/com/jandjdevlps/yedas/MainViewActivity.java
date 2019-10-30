@@ -1,33 +1,38 @@
-package com.example.yedas;
+package com.jandjdevlps.yedas;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,11 +40,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class MainViewActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
         Toolbar toolbar;
 //        FloatingActionButton fab;
         FirebaseAuth firebaseAuth;
+        FirebaseUser user;
         DrawerLayout drawer;
         NavigationView navigationView;
         ActionBarDrawerToggle toggle;
@@ -53,6 +60,7 @@ public class MainViewActivity extends AppCompatActivity implements NavigationVie
         private DatabaseReference fDatabase;
         private DatabaseReference fRef;
 
+        String title;
         String filename;
         String sender;
         String date;
@@ -80,6 +88,13 @@ public class MainViewActivity extends AppCompatActivity implements NavigationVie
         sender = "no none";
 
         firebaseAuth = FirebaseAuth.getInstance();
+        user =firebaseAuth.getCurrentUser();
+        assert user != null;
+        if(!user.isEmailVerified()){
+            Toast.makeText(getApplicationContext(),"이메일 인증을 진행하셔야 앱을 사용할 수 있습니다.",Toast.LENGTH_LONG).show();
+            startActivity(new Intent(getApplicationContext(),LoginActivity.class));
+            finish();
+        }
         mDatabase = FirebaseDatabase.getInstance().getReference();
         myRef  = mDatabase.child("User");
 
@@ -99,11 +114,12 @@ public class MainViewActivity extends AppCompatActivity implements NavigationVie
                     if (userd != null) {
                         user_name.setText(userd.getUsername());
                         user_email.setText(userd.getEmail());
-                    }else{
+                    } else {
                         user_name.setText(user.getDisplayName());
                         user_email.setText(user.getEmail());
                     }
                 }
+
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
 
@@ -112,54 +128,79 @@ public class MainViewActivity extends AppCompatActivity implements NavigationVie
             fRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    for(DataSnapshot ds : dataSnapshot.child(user.getUid()).getChildren()) {
+                    for (DataSnapshot ds : dataSnapshot.child(user.getUid()).getChildren()) {
                         Document doc = ds.getValue(Document.class);
+                        title = doc.getTitle();
                         date = doc.getDate();
                         descript = doc.getDescript();
                         decision = doc.getDecision();
                         filename = doc.getfilename();
                         sender = doc.getSender();
                         type = doc.getType();
-                        if(decision<0){
-                             if(decision==-2){
-                            Uri uri_sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                            Notification n = new Notification.Builder(getApplicationContext())
-                                    .setContentTitle("새 결재 파일이 도착했습니다.")
-                                    .setContentText("작성자 : "+sender+" 파일 이름 : "+filename)
-                                    .setSmallIcon(R.drawable.ic_menu_manage)
-                                    .setSound(uri_sound)
-                                    .build();
-                            NotificationManager mNotificationManager =
-                                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                            mNotificationManager.notify(0,n);
-                        }
-                        Document new_obj = new Document(filename,sender,type,date,descript,decision);
-                        ListViewitem u = new ListViewitem(filename, sender);
-                        data.add(u);
-                        doc_obj.add(new_obj);
+                        if (decision < 0) {
+                            if (decision == -2) {
+                                Uri uri_sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                                Notification n = new Notification.Builder(getApplicationContext())
+                                        .setContentTitle("새 결재 파일이 도착했습니다.")
+                                        .setContentText("작성자 : " + sender + " 파일 이름 : " + filename)
+                                        .setSmallIcon(R.drawable.ic_menu_manage)
+                                        .setSound(uri_sound)
+                                        .build();
+                                NotificationManager mNotificationManager =
+                                        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                                mNotificationManager.notify(0, n);
+                            }
+                            Document new_obj = new Document(title,filename, sender, type, date, descript, decision);
+                            ListViewitem u = new ListViewitem(filename, sender);
+                            data.add(u);
+                            doc_obj.add(new_obj);
                         }
                     }
-                    if(data.isEmpty()){
+                    if (data.isEmpty()) {
                         filename = "파일이 전송된 것이 없습니다.";
                         sender = " ";
-                        data.add(new ListViewitem(filename,sender));
-                        filename="";
+                        data.add(new ListViewitem(filename, sender));
+                        filename = "";
                     }
                     listView.setAdapter(adapter);
                 }
+
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
                     filename = "파일이 전송된 것이 없습니다.";
                     sender = " ";
-                    data.add(new ListViewitem(filename,sender));
+                    data.add(new ListViewitem(filename, sender));
                     listView.setAdapter(adapter);
                 }
             });
-
-        }else{
-            startActivity(new Intent(getApplicationContext(), LoadingScreenActivity.class));
-            finish();
         }
+        fRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
 //        fab.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
@@ -183,19 +224,20 @@ public class MainViewActivity extends AppCompatActivity implements NavigationVie
             if(filename.equals("")||doc_obj.isEmpty()){
                     Toast.makeText(getApplicationContext(),"접근할 파일이 존재하지 않습니다.",Toast.LENGTH_SHORT).show();
             }else {
+                title = doc_obj.get(position).getTitle();
             filename = doc_obj.get(position).getfilename();
             date =doc_obj.get(position).getDate();
             sender=doc_obj.get(position).getSender();
             type =doc_obj.get(position).getType();
             descript =doc_obj.get(position).getDescript();
 
+            doclist.putExtra("title",title);
             doclist.putExtra("file_name",filename);
             doclist.putExtra("doc_date",date);
             doclist.putExtra("doc_dat",filename);
             doclist.putExtra("writer_dat",sender);
             doclist.putExtra("type",type);
             doclist.putExtra("decryption",descript);
-            decision = -1;
             doclist.putExtra("decision",decision);
 
                 startActivity(doclist);

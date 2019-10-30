@@ -1,4 +1,4 @@
-package com.example.yedas;
+package com.jandjdevlps.yedas;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -57,51 +57,55 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         newPassButton = findViewById(R.id.find_pswd);
         firebaseAuth = FirebaseAuth.getInstance();
 
+        gsignInButton.setEnabled(false);
+
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = loginEmail.getText().toString();
-                String password = loginPassword.getText().toString();
-
-                if(TextUtils.isEmpty(email)){
-                    Toast.makeText(getApplicationContext(),"이메일을 입력해주세요",Toast.LENGTH_SHORT).show();
-                    return;
-                }else if(TextUtils.isEmpty(password)){
-                    Toast.makeText(getApplicationContext(),"비밀번호를 입력해주세요",Toast.LENGTH_SHORT).show();
-                    return;
-                }else if(password.length()<4){
-                    Toast.makeText(getApplicationContext(),"비밀번호는 4자리 이상이어야합니다.",Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                firebaseAuth.createUserWithEmailAndPassword(email,password)
-                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if(task.isSuccessful()){
-                                    Log.d(TAG, "signInWithEmail:sendVerification");
-                                    user = FirebaseAuth.getInstance().getCurrentUser();
-                                    user.sendEmailVerification();
-                                    Toast.makeText(getApplicationContext(),"해당 이메일로 인증내용이 전송되었습니다. \n승인을 하신후 계속 진행해주세요",Toast.LENGTH_LONG).show();
-                                    //startActivity(new Intent(getApplicationContext(), MainViewActivity.class));
-                                    //finish();
-                                }
-                                else{
-                                    user = FirebaseAuth.getInstance().getCurrentUser();
-                                    if(user==null){
-                                        Toast.makeText(getApplicationContext(),"오류 발견 관리자에게 문의해주세요!!",Toast.LENGTH_LONG).show();
-                                        startActivity(new Intent(getApplicationContext(),LoadingScreenActivity.class));
-                                        finish();
-                                    }else if(user.isEmailVerified()) {
-                                        startActivity(new Intent(getApplicationContext(), JoinActivity.class));
-                                        finish();
-                                    }else{
-                                        Toast.makeText(getApplicationContext(),"이메일 인증을 진행해주세요.",Toast.LENGTH_SHORT).show();
-                                    }
-
-                                }
-                            }
-                        });
+                startActivity(new Intent(getApplicationContext(),JoinActivity.class));
+                finish();
+//                String email = loginEmail.getText().toString();
+//                String password = loginPassword.getText().toString();
+//
+//                if(TextUtils.isEmpty(email)){
+//                    Toast.makeText(getApplicationContext(),"이메일을 입력해주세요",Toast.LENGTH_SHORT).show();
+//                    return;
+//                }else if(TextUtils.isEmpty(password)){
+//                    Toast.makeText(getApplicationContext(),"비밀번호를 입력해주세요",Toast.LENGTH_SHORT).show();
+//                    return;
+//                }else if(password.length()<4){
+//                    Toast.makeText(getApplicationContext(),"비밀번호는 4자리 이상이어야합니다.",Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+//
+//                firebaseAuth.createUserWithEmailAndPassword(email,password)
+//                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+//                            @Override
+//                            public void onComplete(@NonNull Task<AuthResult> task) {
+//                                if(task.isSuccessful()){
+//                                    Log.d(TAG, "signInWithEmail:sendVerification");
+//                                    user = FirebaseAuth.getInstance().getCurrentUser();
+//                                    user.sendEmailVerification();
+//                                    Toast.makeText(getApplicationContext(),"해당 이메일로 인증내용이 전송되었습니다. \n승인을 하신후 계속 진행해주세요",Toast.LENGTH_LONG).show();
+//                                    //startActivity(new Intent(getApplicationContext(), MainViewActivity.class));
+//                                    //finish();
+//                                }
+//                                else{
+//                                    user = FirebaseAuth.getInstance().getCurrentUser();
+//                                    if(user==null){
+//                                        Toast.makeText(getApplicationContext(),"오류 발견 관리자에게 문의해주세요!!",Toast.LENGTH_LONG).show();
+//                                        startActivity(new Intent(getApplicationContext(),LoadingScreenActivity.class));
+//                                        finish();
+//                                    }else if(user.isEmailVerified()) {
+//                                        startActivity(new Intent(getApplicationContext(), JoinActivity.class));
+//                                        finish();
+//                                    }else{
+//                                        Toast.makeText(getApplicationContext(),"이메일 인증을 진행해주세요.",Toast.LENGTH_SHORT).show();
+//                                    }
+//
+//                                }
+//                            }
+//                        });
             }
         });
 

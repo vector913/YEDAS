@@ -1,8 +1,9 @@
-package com.example.yedas;
-
-import java.util.Date;
+package com.jandjdevlps.yedas;
 
 public class Document {
+
+
+    private String title;
     private String filename;
     private String sender;
     private String type;
@@ -10,13 +11,14 @@ public class Document {
     private String descript; // 설명
     private int decision; // 결정 -1 : 대기 , 0 : 거절 , 1 : 승인
 
-    public Document(String file, String sender, String type, String date, String descript, int decision){
+    public Document(String title, String file, String sender, String type, String date, String descript, int decision){
         this.date = date;
         this.decision = decision;
         this.descript = descript;
         this.filename = file;
         this.sender = sender;
         this.type = type;
+        this.title = title;
     }
     public String getfilename() {
         return filename;
@@ -66,5 +68,13 @@ public class Document {
 
     public void setDecision(int decision) {
         this.decision = decision;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

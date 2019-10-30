@@ -1,4 +1,4 @@
-package com.example.yedas;
+package com.jandjdevlps.yedas;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -72,14 +72,14 @@ public class DocumentViewActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         final FirebaseUser user  = firebaseAuth.getCurrentUser();
         doc_date.setText(getIntent().getStringExtra("doc_date"));
-        doc_id.setText(getIntent().getStringExtra("doc_dat"));
+        doc_id.setText(getIntent().getStringExtra("title"));
         doc_sender.setText(getIntent().getStringExtra("writer_dat"));
         doc_descript.setText(getIntent().getStringExtra("decryption"));
         type = getIntent().getStringExtra("type");
         filename = getIntent().getStringExtra("doc_dat")+"."+type;
         tmp = getIntent().getStringExtra("doc_dat");
         doc_file_name.setText(filename);
-        decision = getIntent().getIntExtra("decision",-2);
+        decision = getIntent().getIntExtra("decision",-1);
         assert user != null;
         fDatabase = FirebaseDatabase.getInstance().getReference();
         fRef = fDatabase.child("Files");
@@ -93,7 +93,7 @@ public class DocumentViewActivity extends AppCompatActivity {
                         assert doc != null;
                         if (doc.getfilename().equals(tmp)) {
                             tRef = ds.getRef();
-                            tRef.child("decision").setValue(decision);
+                            tRef.child("decision").setValue(-1);
                             break;
                         }
                     }

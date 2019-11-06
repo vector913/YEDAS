@@ -147,6 +147,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                          public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                             User userd = dataSnapshot.child(user.getUid()).getValue(User.class);
                                             try {
+                                                boolean verified = userd.getisVerified();
+                                                if(!verified){
+                                                    mRef.child(user.getUid()).child("verified").setValue(true);
+                                                }
                                                 String name = userd.getUsername();
                                                 if(name!=null) {
                                                     startActivity(new Intent(getApplicationContext(), MainViewActivity.class));

@@ -8,12 +8,57 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:92537471845:android:3f64a31bc407cd8dcdd78c",
+        "android_client_info": {
+          "package_name": "com.example.test_week4_1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "92537471845-qeu452ms11g9gucnq16snr0aboa5nkkr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.test_week4_1",
+            "certificate_hash": "7755db420e68285ba8d9a1929e097a1130a27cfc"
+          }
+        },
+        {
+          "client_id": "92537471845-dmas8hhchukiu0fe43rus9o7o321odkn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCva3vcwEvsgJnEXcyhwvNMB4OguQELUeU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "92537471845-dmas8hhchukiu0fe43rus9o7o321odkn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:92537471845:android:f997755f89d88620cdd78c",
         "android_client_info": {
           "package_name": "com.jandjdevlps.yedas"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "92537471845-s6q7399q08qfb9t7h0pii373rcsvvrpm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jandjdevlps.yedas",
+            "certificate_hash": "7755db420e68285ba8d9a1929e097a1130a27cfc"
+          }
+        },
         {
           "client_id": "92537471845-dmas8hhchukiu0fe43rus9o7o321odkn.apps.googleusercontent.com",
           "client_type": 3

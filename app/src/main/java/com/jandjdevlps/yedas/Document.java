@@ -17,8 +17,8 @@ public class Document {
         this.descript = descript;
         this.filename = file;
         this.sender = sender;
-        this.type = type;
         this.title = title;
+        this.type = type;
     }
     public String getfilename() {
         return filename;

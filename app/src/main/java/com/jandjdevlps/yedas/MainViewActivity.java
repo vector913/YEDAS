@@ -11,6 +11,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -41,6 +42,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 
 public class MainViewActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
         Toolbar toolbar;
@@ -99,7 +101,7 @@ public class MainViewActivity extends AppCompatActivity implements NavigationVie
         myRef  = mDatabase.child("User");
 
         fDatabase = FirebaseDatabase.getInstance().getReference();
-        fRef = fDatabase.child("Files");
+        fRef = fDatabase.child("Files").child(user.getUid());
 
         final FirebaseUser user  = firebaseAuth.getCurrentUser();
         final ArrayList<ListViewitem> data=new ArrayList<>();
@@ -125,37 +127,94 @@ public class MainViewActivity extends AppCompatActivity implements NavigationVie
 
                 }
             });
-            fRef.addValueEventListener(new ValueEventListener() {
+            Uri uri_sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            final Notification n = new Notification.Builder(getApplicationContext())
+                    .setContentTitle("새 결재 파일이 도착했습니다.")
+                    .setContentText("작성자 : " + sender + " 파일 이름 : " + filename)
+                    .setSmallIcon(R.drawable.ic_menu_manage)
+                    .setSound(uri_sound)
+                    .build();
+
+//            fRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                    if(!data.isEmpty()) {
+//                        if(data.size()==1)
+//                            if (data.get(0).getName().equals(" ")) {
+//                                data.remove(0);
+//                            }
+//                    }
+//                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+//                        Document doc = ds.getValue(Document.class);
+//                        title = doc.getTitle();
+//                        date = doc.getDate();
+//                        descript = doc.getDescript();
+//                        decision = doc.getDecision();
+//                        filename = doc.getfilename();
+//                        sender = doc.getSender();
+//                        type = doc.getType();
+//                        if (decision < 0) {
+//                            if (decision == -2) {
+//                                NotificationManager mNotificationManager =
+//                                        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//                                mNotificationManager.notify(doc_obj.size()+1, n);
+//                            }
+//                            Document new_obj = new Document(title,filename, sender, type, date, descript, decision);
+//                            ListViewitem u = new ListViewitem(filename, sender);
+//                            data.add(u);
+//                            doc_obj.add(new_obj);
+//                        }
+//                    }
+//                    if (data.isEmpty()) {
+//                        filename = "파일이 전송된 것이 없습니다.";
+//                        sender = " ";
+//                        data.add(new ListViewitem(filename, sender));
+//                        filename = "";
+//                    }
+//                    listView.setAdapter(adapter);
+//                }
+//
+//                @Override
+//                public void onCancelled(@NonNull DatabaseError databaseError) {
+//                    filename = "파일이 전송된 것이 없습니다.";
+//                    sender = " ";
+//                    data.add(new ListViewitem(filename, sender));
+//                    listView.setAdapter(adapter);
+//                }
+//            });
+            fRef.addChildEventListener(new ChildEventListener() {
                 @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    for (DataSnapshot ds : dataSnapshot.child(user.getUid()).getChildren()) {
-                        Document doc = ds.getValue(Document.class);
-                        title = doc.getTitle();
-                        date = doc.getDate();
-                        descript = doc.getDescript();
-                        decision = doc.getDecision();
-                        filename = doc.getfilename();
-                        sender = doc.getSender();
-                        type = doc.getType();
-                        if (decision < 0) {
-                            if (decision == -2) {
-                                Uri uri_sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                                Notification n = new Notification.Builder(getApplicationContext())
-                                        .setContentTitle("새 결재 파일이 도착했습니다.")
-                                        .setContentText("작성자 : " + sender + " 파일 이름 : " + filename)
-                                        .setSmallIcon(R.drawable.ic_menu_manage)
-                                        .setSound(uri_sound)
-                                        .build();
-                                NotificationManager mNotificationManager =
-                                        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                                mNotificationManager.notify(0, n);
+                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//                    if(dataSnapshot.exists()){
+                       if(!data.isEmpty()) {
+                           if(data.size()==1) {
+                               if (data.get(0).getName().equals(" ")) {
+                                   data.remove(0);
+                               }
+                           }
+                      }
+                            Document doc = dataSnapshot.getValue(Document.class);
+                            title = doc.getTitle();
+                            date = doc.getDate();
+                            descript = doc.getDescript();
+                            decision = doc.getDecision();
+                            filename = doc.getfilename();
+                            sender = doc.getSender();
+                            type = doc.getType();
+                            if (decision < 0) {
+                                if (decision == -2) {
+                                    NotificationManager mNotificationManager =
+                                            (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                                    mNotificationManager.notify(data.size()+1, n);
+                                }
+                                Document new_obj = new Document(title, filename, sender, type, date, descript, decision);
+                                ListViewitem u = new ListViewitem(filename, sender);
+                                data.add(u);
+                                doc_obj.add(new_obj);
+                                Log.d("MainViewActivity", new_obj.getfilename()+"has been added");
                             }
-                            Document new_obj = new Document(title,filename, sender, type, date, descript, decision);
-                            ListViewitem u = new ListViewitem(filename, sender);
-                            data.add(u);
-                            doc_obj.add(new_obj);
-                        }
-                    }
+
+//                    }
                     if (data.isEmpty()) {
                         filename = "파일이 전송된 것이 없습니다.";
                         sender = " ";
@@ -166,40 +225,102 @@ public class MainViewActivity extends AppCompatActivity implements NavigationVie
                 }
 
                 @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                    filename = "파일이 전송된 것이 없습니다.";
-                    sender = " ";
-                    data.add(new ListViewitem(filename, sender));
+                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//                    if(dataSnapshot.exists()){
+                    if(!data.isEmpty()) {
+                        if(data.size()==1)
+                            if (data.get(0).getName().equals(" ")) {
+                                data.remove(0);
+                            }
+                    }
+                    Document doc = dataSnapshot.getValue(Document.class);
+                    title = doc.getTitle();
+                    date = doc.getDate();
+                    descript = doc.getDescript();
+                    decision = doc.getDecision();
+                    filename = doc.getfilename();
+                    sender = doc.getSender();
+                    type = doc.getType();
+                    if (decision < 0) {
+                        if (decision == -2) {
+                            NotificationManager mNotificationManager =
+                                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                            mNotificationManager.notify(data.size()+1, n);
+                        }
+                       for(int i = 0; i<doc_obj.size();i++){
+                           if(doc_obj.get(i).getfilename().equals(filename)){
+                                doc_obj.get(i).setDecision(decision);
+                                doc_obj.get(i).setDate(date);
+                                doc_obj.get(i).setDescription(descript);
+                                doc_obj.get(i).setfilename(filename);
+                                doc_obj.get(i).setSender(sender);
+                                doc_obj.get(i).setTitle(title);
+                                doc_obj.get(i).setType(type);
+                                data.get(i).setDocs(filename);
+                                data.get(i).setName(sender);
+                           }
+                       }
+                        Log.d("MainViewActivity", doc.getfilename()+"has been revised");
+                    }
+
+//                    }
+                    if (data.isEmpty()) {
+                        filename = "파일이 전송된 것이 없습니다.";
+                        sender = " ";
+                        data.add(new ListViewitem(filename, sender));
+                        filename = "";
+                    }
                     listView.setAdapter(adapter);
+                }
+
+                @Override
+                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                    if(!data.isEmpty()) {
+                        if(data.size()==1)
+                            if (data.get(0).getName().equals(" ")) {
+                                data.remove(0);
+                            }
+                    }
+                    Document doc = dataSnapshot.getValue(Document.class);
+                    title = doc.getTitle();
+                    date = doc.getDate();
+                    descript = doc.getDescript();
+                    decision = doc.getDecision();
+                    filename = doc.getfilename();
+                    sender = doc.getSender();
+                    type = doc.getType();
+                    if (decision < 0) {
+                        if (decision == -2) {
+                            NotificationManager mNotificationManager =
+                                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                            mNotificationManager.notify(data.size()+1, n);
+                        }
+                        Document new_obj = new Document(title, filename, sender, type, date, descript, decision);
+                        ListViewitem u = new ListViewitem(filename, sender);
+                        data.add(u);
+                        doc_obj.add(new_obj);
+                        Log.d("MainViewActivity", new_obj.getfilename()+"has been added");
+                    }
+
+//                    }
+                    if (data.isEmpty()) {
+                        filename = "파일이 전송된 것이 없습니다.";
+                        sender = " ";
+                        data.add(new ListViewitem(filename, sender));
+                        filename = "";
+                    }
+                    listView.setAdapter(adapter);
+                }
+
+                @Override
+                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                  Log.d("MainViewActivity.java","child canceled :" + databaseError.toException());
                 }
             });
         }
-        fRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
 
 //        fab.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -214,8 +335,6 @@ public class MainViewActivity extends AppCompatActivity implements NavigationVie
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
-
-
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

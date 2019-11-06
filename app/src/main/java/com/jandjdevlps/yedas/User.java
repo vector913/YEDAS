@@ -5,7 +5,7 @@ public class User {
     private String email;
     private String department;
     private String job;
-    private boolean isEmailVerified;
+    private boolean verified;
 
     public User(){
      //default constructor
@@ -16,10 +16,10 @@ public class User {
        this.email = email;
        this.department = department;
        this. job = job;
-       this.isEmailVerified = isEmailVerified;
+       this.verified = isEmailVerified;
     }
-    public boolean isVerified() {
-        return isEmailVerified;
+    public boolean getisVerified() {
+        return verified;
     }
 
     public String getEmail() {

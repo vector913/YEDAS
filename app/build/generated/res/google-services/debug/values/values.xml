@@ -4,7 +4,7 @@
     <string name="firebase_database_url" translatable="false">https://yedas-e5423.firebaseio.com</string>
     <string name="gcm_defaultSenderId" translatable="false">92537471845</string>
     <string name="google_api_key" translatable="false">AIzaSyCva3vcwEvsgJnEXcyhwvNMB4OguQELUeU</string>
-    <string name="google_app_id" translatable="false">1:92537471845:android:049cab44eefcdcafcdd78c</string>
+    <string name="google_app_id" translatable="false">1:92537471845:android:f997755f89d88620cdd78c</string>
     <string name="google_crash_reporting_api_key" translatable="false">AIzaSyCva3vcwEvsgJnEXcyhwvNMB4OguQELUeU</string>
     <string name="google_storage_bucket" translatable="false">yedas-e5423.appspot.com</string>
     <string name="project_id" translatable="false">yedas-e5423</string>

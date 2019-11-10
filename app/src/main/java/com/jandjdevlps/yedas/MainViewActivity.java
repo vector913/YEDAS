@@ -182,10 +182,30 @@ public class MainViewActivity extends AppCompatActivity implements NavigationVie
 //                    listView.setAdapter(adapter);
 //                }
 //            });
+            fRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if(!dataSnapshot.hasChildren()){
+                        if (data.isEmpty()) {
+                            filename = "파일이 전송된 것이 없습니다.";
+                            sender = " ";
+                            data.add(new ListViewitem(filename, sender));
+                            filename = "";
+                        }
+                        listView.setAdapter(adapter);
+                    }
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
             fRef.addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 //                    if(dataSnapshot.exists()){
+
                        if(!data.isEmpty()) {
                            if(data.size()==1) {
                                if (data.get(0).getName().equals(" ")) {
@@ -208,7 +228,7 @@ public class MainViewActivity extends AppCompatActivity implements NavigationVie
                                     mNotificationManager.notify(data.size()+1, n);
                                 }
                                 Document new_obj = new Document(title, filename, sender, type, date, descript, decision);
-                                ListViewitem u = new ListViewitem(filename, sender);
+                                ListViewitem u = new ListViewitem(title, sender);
                                 data.add(u);
                                 doc_obj.add(new_obj);
                                 Log.d("MainViewActivity", new_obj.getfilename()+"has been added");
@@ -256,7 +276,7 @@ public class MainViewActivity extends AppCompatActivity implements NavigationVie
                                 doc_obj.get(i).setSender(sender);
                                 doc_obj.get(i).setTitle(title);
                                 doc_obj.get(i).setType(type);
-                                data.get(i).setDocs(filename);
+                                data.get(i).setDocs(title);
                                 data.get(i).setName(sender);
                            }
                        }
@@ -296,7 +316,7 @@ public class MainViewActivity extends AppCompatActivity implements NavigationVie
                             mNotificationManager.notify(data.size()+1, n);
                         }
                         Document new_obj = new Document(title, filename, sender, type, date, descript, decision);
-                        ListViewitem u = new ListViewitem(filename, sender);
+                        ListViewitem u = new ListViewitem(title, sender);
                         data.add(u);
                         doc_obj.add(new_obj);
                         Log.d("MainViewActivity", new_obj.getfilename()+"has been added");
@@ -344,11 +364,11 @@ public class MainViewActivity extends AppCompatActivity implements NavigationVie
                     Toast.makeText(getApplicationContext(),"접근할 파일이 존재하지 않습니다.",Toast.LENGTH_SHORT).show();
             }else {
                 title = doc_obj.get(position).getTitle();
-            filename = doc_obj.get(position).getfilename();
-            date =doc_obj.get(position).getDate();
-            sender=doc_obj.get(position).getSender();
-            type =doc_obj.get(position).getType();
-            descript =doc_obj.get(position).getDescript();
+                filename = doc_obj.get(position).getfilename();
+                date =doc_obj.get(position).getDate();
+                sender=doc_obj.get(position).getSender();
+                type =doc_obj.get(position).getType();
+                descript =doc_obj.get(position).getDescript();
 
             doclist.putExtra("title",title);
             doclist.putExtra("file_name",filename);

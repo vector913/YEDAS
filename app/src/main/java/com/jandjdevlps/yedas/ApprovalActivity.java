@@ -12,6 +12,7 @@ import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.AttributeSet;
@@ -35,10 +36,13 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.pdf.PdfWriter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -57,17 +61,23 @@ public class ApprovalActivity extends AppCompatActivity {
     String pic_name;
     String descript;
     String StoredPath;
+    String sender;
     String tmp;
+    String date;
     private DatabaseReference fDatabase;
     private DatabaseReference fRef;
-
-
+    private DatabaseReference sfRef;
+    private DatabaseReference uRef;
+    String senderuid;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.approval_activity);
 
-        pic_name = getIntent().getStringExtra("filename");
+        Intent getdata = getIntent();
+        pic_name = getdata.getStringExtra("filename");
+        sender = getdata.getStringExtra("names2");
+        date = getdata.getStringExtra("date2");
         StoredPath = DIRECTORY + pic_name + ".png";
 
         canvasLL = findViewById(R.id.canvasLL);
@@ -85,9 +95,10 @@ public class ApprovalActivity extends AppCompatActivity {
         btnCancel = findViewById(R.id.send_decline);
         fDatabase = FirebaseDatabase.getInstance().getReference();
         fRef = fDatabase.child("Files");
+        sfRef = fDatabase.child("SendFiles");
+        uRef = fDatabase.child("User");
         tmp = getIntent().getStringExtra("filename");
         view = canvasLL;
-
         btnClear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,30 +115,101 @@ public class ApprovalActivity extends AppCompatActivity {
                 final FirebaseUser user = firebaseAuth.getCurrentUser();
                 FirebaseStorage storage = FirebaseStorage.getInstance();
                 StorageReference storageReference = storage.getReferenceFromUrl("gs://yedas-e5423.appspot.com");
-                StorageReference mountimg = storageReference.child(user.getUid()).child(pic_name+".png");
+                StorageReference mountimg;
                 try {
-                    fRef.addValueEventListener(new ValueEventListener() {
+                    fRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            int check = 0;
                             for(DataSnapshot ds : dataSnapshot.child(user.getUid()).getChildren()) {
                                 Document doc = ds.getValue(Document.class);
                                 assert doc != null;
-                                if(doc.getfilename().equals(tmp)){
-                                   fRef = ds.getRef();
+                                if(doc.getfilename().equals(tmp)&&doc.getDate().equals(date)&&doc.getDecision()<0){
+                                    fRef = ds.getRef();
+                                    fRef.child("decision").setValue(1);
+                                    check =1;
                                    break;
                                 }
-                                fRef.child("decision").setValue(1);
                             }
+                           if(check == 0){
+                               Toast.makeText(getApplicationContext(),"데이터베이스 기록에 실패했습니다. 관리자에게 문의바랍니다.",Toast.LENGTH_LONG).show();
+                           }
+                            uRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                                    System.out.println("key2 :" + dataSnapshot.getKey());
+                                    for (DataSnapshot un :dataSnapshot.getChildren()) {
+                                        User who = un.getValue(User.class);
+                                        senderuid = who.getUsername();
+                                        // System.out.println("name :"+sender+" un.getkey() : "+un.getKey());
+                                        if(senderuid.equals(sender)){
+                                            senderuid = un.getKey();
+                                            break;
+                                        }
+                                    }
+
+                                    // System.out.println("name :" + senderuid);
+
+                                    sfRef.child(senderuid).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            int check = 0;
+//                                            System.out.println("tmp : " + tmp);
+//                                            System.out.println("date : " + date);
+                                            for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                                                Document doc = ds.getValue(Document.class);
+//                                                System.out.println("filename :" + doc.getfilename());
+//                                                System.out.println("decision :"+ doc.getDecision());
+//                                                System.out.println("Date : " +doc.getDate());
+//                                                System.out.println("Ref  : "+ds.getRef());
+                                                assert doc != null;
+                                                if(doc.getfilename().equals(tmp)&&doc.getDecision()<0&&doc.getDate().equals(date)){
+                                                    sfRef = ds.getRef();
+                                                   // System.out.println("Ref:" + sfRef.getRef().toString());
+                                                    sfRef.child("decision").setValue(1);
+                                                    check =1;
+                                                    break;
+                                                }
+                                            }
+                                            if(check == 0){
+                                                Toast.makeText(getApplicationContext(),"데이터베이스 기록에 실패했습니다. 관리자에게 문의바랍니다.",Toast.LENGTH_LONG).show();
+                                            }
+//                                            startActivity(new Intent(getApplicationContext(),MainViewActivity.class));
+                                            finish();
+                                        }
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                                        }
+                                    });
+
+                                }
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                }
+                            });
+
                         }
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
-
                         }
                     });
-                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.PNG,100,stream);
-                    byte[] bytef = stream.toByteArray();
-                    UploadTask uploadTask = mountimg.putBytes(bytef);
+                    com.itextpdf.text.Document document = new com.itextpdf.text.Document();
+//                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//                    bitmap.compress(Bitmap.CompressFormat.PNG,100,stream);
+                    String newpdf = DIRECTORY+"/"+getIntent().getStringExtra("filename")+"(승인됨).pdf";
+                    PdfWriter.getInstance(document,new FileOutputStream(newpdf));
+                    document.open();
+                    Image image = Image.getInstance(StoredPath);
+                    float scaler = ((document.getPageSize().getWidth() - document.leftMargin()
+                            - document.rightMargin() - 0) / image.getWidth()) * 100; // 0 means you have no indentation. If you have any, change it.
+                    image.scalePercent(scaler);
+                    image.setAlignment(Image.ALIGN_CENTER | Image.ALIGN_TOP);
+                    document.add(image);
+                    document.close();
+//                    byte[] bytef = stream.toByteArray();
+                    Uri pdf_doc = Uri.fromFile(new File(newpdf));
+                    mountimg = storageReference.child(user.getUid()).child(getIntent().getStringExtra("filename")+"(승인됨).pdf");
+                    UploadTask uploadTask = mountimg.putFile(pdf_doc);
                     uploadTask.addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
@@ -138,6 +220,7 @@ public class ApprovalActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             Toast.makeText(getApplicationContext(),"결재가 승인되었습니다.",Toast.LENGTH_SHORT).show();
+                            //Uri downloadUrl = taskSnapshot.getUploadSessionUri();
                             startActivity(new Intent(getApplicationContext(),MainViewActivity.class));
                             finish();
                         }
@@ -168,7 +251,6 @@ public class ApprovalActivity extends AppCompatActivity {
 
         btnCancel.setOnClickListener(new View.OnClickListener() {
             final String[] items = {"내용 오류", "오타 발견", "내용 수정 요청", "기타 사유"};
-
             @Override
             public void onClick(View v) {
                 new AlertDialog.Builder(ApprovalActivity.this)
@@ -185,29 +267,87 @@ public class ApprovalActivity extends AppCompatActivity {
                         }).setPositiveButton("거절 사유 전송",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
+
                                 FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
                                 final FirebaseUser user = firebaseAuth.getCurrentUser();
-                                fRef.addValueEventListener(new ValueEventListener() {
+                                fRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                         for(DataSnapshot ds : dataSnapshot.child(user.getUid()).getChildren()) {
                                             Document doc = ds.getValue(Document.class);
                                             assert doc != null;
-                                            if(doc.getfilename().equals(tmp)){
-                                               fRef = ds.getRef();
-                                                break;
+                                            if(doc.getfilename().equals(tmp)&&doc.getDecision()<0&&doc.getDate().equals(date)){
+                                                fRef = ds.getRef();
+                                                sender = doc.getSender();
+                                                //date = doc.getDate();
+                                              // System.out.println("fref.getRef() :" + fRef.getRef());
+                                               break;
                                             }
                                         }
                                         fRef.child("decision").setValue(0);
                                         fRef.getRef().child("descript").setValue(descript);
-                                        startActivity(new Intent(getApplicationContext(),MainViewActivity.class));
-                                        finish();
+                                       // System.out.println("key :" + uRef.orderByChild("username").getRef());
+                                        uRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                System.out.println("key2 :" + dataSnapshot.getKey());
+                                                for (DataSnapshot un :dataSnapshot.getChildren()) {
+                                                    User who = un.getValue(User.class);
+                                                    senderuid = who.getUsername();
+                                                   // System.out.println("name :"+sender+" un.getkey() : "+un.getKey());
+                                                    if(senderuid.equals(sender)){
+                                                        senderuid = un.getKey();
+                                                        break;
+                                                    }
+                                                }
+
+                                               // System.out.println("name :" + senderuid);
+
+                                                sfRef.child(senderuid).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                         int check = 0;
+                                                         System.out.println("tmp : " + tmp);
+                                                        System.out.println("date : " + date);
+                                                        for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                                                            Document doc = ds.getValue(Document.class);
+                                                            System.out.println("filename :" + doc.getfilename());
+                                                            System.out.println("decision :"+ doc.getDecision());
+                                                            System.out.println("Date : " +doc.getDate());
+                                                            System.out.println("Ref  : "+ds.getRef());
+                                                            assert doc != null;
+                                                            if(doc.getfilename().equals(tmp)&&doc.getDecision()<0&&doc.getDate().equals(date)){
+                                                                sfRef = ds.getRef();
+                                                                System.out.println("Ref:" + sfRef.getRef().toString());
+                                                                sfRef.child("decision").setValue(0);
+                                                                sfRef.getRef().child("descript").setValue(descript);
+                                                                check =1;
+                                                                break;
+                                                            }
+                                                        }
+                                                        if(check == 0){
+                                                            Toast.makeText(getApplicationContext(),"데이터베이스 기록에 실패했습니다. 관리자에게 문의바랍니다.",Toast.LENGTH_LONG).show();
+                                                        }
+                                                        startActivity(new Intent(getApplicationContext(),MainViewActivity.class));
+                                                        finish();
+                                                    }
+                                                    @Override
+                                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                    }
+                                                });
+
+                                            }
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                            }
+                                        });
+
                                     }
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError databaseError) {
-
                                     }
                                 });
+
                                // Toast.makeText(ApprovalActivity.this, "Success", Toast.LENGTH_SHORT).show();
                             }
                         }).setNegativeButton("취소",
@@ -216,11 +356,7 @@ public class ApprovalActivity extends AppCompatActivity {
                                 Toast.makeText(ApprovalActivity.this,"다시 결정해주세요",Toast.LENGTH_SHORT).show();
                             }
                         }).create().show();
-
-
-
                 //Toast.makeText(getApplicationContext(), "결재를 거절하였습니다.\n기능생성중 ",Toast.LENGTH_SHORT).show();
-
             }
         });
 

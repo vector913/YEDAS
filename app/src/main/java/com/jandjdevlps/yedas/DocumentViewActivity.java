@@ -46,12 +46,14 @@ public class DocumentViewActivity extends AppCompatActivity {
     Button decline_b;
 
     FirebaseAuth firebaseAuth;
-    String filename,type,tmp;
+    String filename,type,tmp,sender,date,senderuid;
     int decision;
     ArrayList<Bitmap> bitmap;
     private DatabaseReference fDatabase;
     private DatabaseReference fRef;
     private DatabaseReference tRef;
+    private DatabaseReference sfRef;
+    private DatabaseReference uRef;
     FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference mStorageRef = storage.getReferenceFromUrl("gs://yedas-e5423.appspot.com");
     StorageReference pathReference;
@@ -71,39 +73,96 @@ public class DocumentViewActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
         final FirebaseUser user  = firebaseAuth.getCurrentUser();
-        doc_date.setText(getIntent().getStringExtra("doc_date"));
+        date = getIntent().getStringExtra("doc_date");
+        doc_date.setText(date);
         doc_id.setText(getIntent().getStringExtra("title"));
-        doc_sender.setText(getIntent().getStringExtra("writer_dat"));
+        sender = getIntent().getStringExtra("writer_dat");
+        doc_sender.setText(sender);
+        sender = doc_sender.getText().toString();
         doc_descript.setText(getIntent().getStringExtra("decryption"));
         type = getIntent().getStringExtra("type");
-        filename = getIntent().getStringExtra("doc_dat")+"."+type;
-        tmp = getIntent().getStringExtra("doc_dat");
+        filename = getIntent().getStringExtra("doc_dat");
+        tmp = filename;
+        filename = filename+"."+type;
         doc_file_name.setText(filename);
         decision = getIntent().getIntExtra("decision",-1);
         assert user != null;
         fDatabase = FirebaseDatabase.getInstance().getReference();
         fRef = fDatabase.child("Files");
+        sfRef = fDatabase.child("SendFiles");
+        uRef = fDatabase.child("User");
 
         if(decision==-2) {
-            fRef.addValueEventListener(new ValueEventListener() {
+            fRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     for (DataSnapshot ds : dataSnapshot.child(user.getUid()).getChildren()) {
                         Document doc = ds.getValue(Document.class);
                         assert doc != null;
-                        if (doc.getfilename().equals(tmp)) {
+                        if (doc.getfilename().equals(tmp)&&doc.getDate().equals(date)) {
                             tRef = ds.getRef();
                             tRef.child("decision").setValue(-1);
                             break;
                         }
                     }
                 }
-
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
 
                 }
             });
+
+            uRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                                    System.out.println("key2 :" + dataSnapshot.getKey());
+                    for (DataSnapshot un :dataSnapshot.getChildren()) {
+                        User who = un.getValue(User.class);
+                        senderuid = who.getUsername();
+                        // System.out.println("name :"+sender+" un.getkey() : "+un.getKey());
+                        if(senderuid.equals(sender)){
+                            senderuid = un.getKey();
+                            break;
+                        }
+                    }
+                    // System.out.println("name :" + senderuid);
+                    sfRef.child(senderuid).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            int check = 0;
+//                                            System.out.println("tmp : " + tmp);
+//                                            System.out.println("date : " + date);
+                            for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                                Document doc = ds.getValue(Document.class);
+//                                                System.out.println("filename :" + doc.getfilename());
+//                                                System.out.println("decision :"+ doc.getDecision());
+//                                                System.out.println("Date : " +doc.getDate());
+//                                                System.out.println("Ref  : "+ds.getRef());
+                                assert doc != null;
+                                if(doc.getfilename().equals(tmp)&&doc.getDecision()<0&&doc.getDate().equals(date)){
+                                    sfRef = ds.getRef();
+                                    // System.out.println("Ref:" + sfRef.getRef().toString());
+                                    sfRef.child("decision").setValue(-1);
+                                    check =1;
+                                    break;
+                                }
+                            }
+                            if(check == 0){
+                                Toast.makeText(getApplicationContext(),"데이터베이스 기록에 실패했습니다. 관리자에게 문의바랍니다.",Toast.LENGTH_LONG).show();
+                            }
+//                                            startActivity(new Intent(getApplicationContext(),MainViewActivity.class));
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                        }
+                    });
+
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                }
+            });
+
         }
 
         pathReference = mStorageRef.child(user.getUid()).child(filename);
@@ -125,13 +184,16 @@ public class DocumentViewActivity extends AppCompatActivity {
 
                                 Log.e("firebase ", ";local tem file created  created " + localFile.toString());
                                 try {
+
                                     bitmap = pdfToBitmap(localFile);
-                                    Intent intent = new Intent(getApplicationContext(), ApprovalActivity.class);
+                                    Intent intent = new Intent(DocumentViewActivity.this,ApprovalActivity.class);
                                     Bitmap bits = bitmap.get(0);
                                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
                                     bits.compress(Bitmap.CompressFormat.PNG, 100, stream);
                                     byte[] bytes = stream.toByteArray();
+                                    intent.putExtra("date2",date);
                                     intent.putExtra("filename", tmp);
+                                    intent.putExtra("names2",sender);
                                     intent.putExtra("Image", bytes);
                                     yourProgressDialog.dismiss();
                                     finish();
@@ -143,7 +205,6 @@ public class DocumentViewActivity extends AppCompatActivity {
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-
                                 yourProgressDialog.dismiss();
                                 Toast.makeText(getApplicationContext(), filename + "이 존재 하지 않습니다. 관리자에게 문의하세요.", Toast.LENGTH_SHORT).show();
                                 Log.e("firebase ", ";local tem file not created  created " + localFile.toString());
@@ -168,8 +229,9 @@ public class DocumentViewActivity extends AppCompatActivity {
                             ByteArrayOutputStream stream = new ByteArrayOutputStream();
                             bits.compress(Bitmap.CompressFormat.PNG, 100, stream);
                             byte[] bytes = stream.toByteArray();
-
+                            intent.putExtra("date2",date);
                             intent.putExtra("filename", tmp);
+                            intent.putExtra("names2",sender);
                             intent.putExtra("Image", bytes);
                             finish();
                             startActivity(intent);
@@ -212,6 +274,7 @@ public class DocumentViewActivity extends AppCompatActivity {
                             public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                                 Log.e("firebase ", ";local tem file created  created " + localFile.toString());
                                 Intent intent = new Intent(getApplicationContext(),PdfViewActivity.class);
+
                                 intent.putExtra("files",filename);
                                 yourProgressDialog.dismiss();
                                     startActivity(intent);

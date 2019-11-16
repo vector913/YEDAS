@@ -68,6 +68,7 @@ public class ApprovalActivity extends AppCompatActivity {
     private DatabaseReference fRef;
     private DatabaseReference sfRef;
     private DatabaseReference uRef;
+    private StorageReference mountimg;
     String senderuid;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +86,7 @@ public class ApprovalActivity extends AppCompatActivity {
         mSignature.setBackgroundColor(Color.WHITE);
         final byte[] bytes = getIntent().getByteArrayExtra("Image");
         Bitmap bits = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+        //noinspection deprecation
         Drawable drawable = new BitmapDrawable(bits);
         mSignature.setBackground(drawable);
         // Dynamically generating Layout through java code
@@ -113,9 +115,9 @@ public class ApprovalActivity extends AppCompatActivity {
                 mSignature.save(view,StoredPath);
                 FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
                 final FirebaseUser user = firebaseAuth.getCurrentUser();
-                FirebaseStorage storage = FirebaseStorage.getInstance();
-                StorageReference storageReference = storage.getReferenceFromUrl("gs://yedas-e5423.appspot.com");
-                StorageReference mountimg;
+                final FirebaseStorage storage = FirebaseStorage.getInstance();
+                final StorageReference storageReference = storage.getReferenceFromUrl("gs://yedas-e5423.appspot.com");
+
                 try {
                     fRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
@@ -174,7 +176,43 @@ public class ApprovalActivity extends AppCompatActivity {
                                             if(check == 0){
                                                 Toast.makeText(getApplicationContext(),"데이터베이스 기록에 실패했습니다. 관리자에게 문의바랍니다.",Toast.LENGTH_LONG).show();
                                             }
-//                                            startActivity(new Intent(getApplicationContext(),MainViewActivity.class));
+                                            try {
+                                                final com.itextpdf.text.Document document = new com.itextpdf.text.Document();
+//                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//                    bitmap.compress(Bitmap.CompressFormat.PNG,100,stream);
+                                                String newpdf = DIRECTORY + "/" + getIntent().getStringExtra("filename") + ".pdf";
+                                                PdfWriter.getInstance(document, new FileOutputStream(newpdf));
+                                                document.open();
+                                                Image image = Image.getInstance(StoredPath);
+                                                float scaler = ((document.getPageSize().getWidth() - document.leftMargin()
+                                                        - document.rightMargin() - 0) / image.getWidth()) * 100; // 0 means you have no indentation. If you have any, change it.
+                                                image.scalePercent(scaler);
+                                                image.setAlignment(Image.ALIGN_CENTER | Image.ALIGN_TOP);
+                                                document.add(image);
+                                                document.close();
+//                    byte[] bytef = stream.toByteArray();
+                                                Uri pdf_doc = Uri.fromFile(new File(newpdf));
+                                                mountimg = storageReference.child(senderuid).child(getIntent().getStringExtra("filename") + ".pdf");
+                                                UploadTask uploadTask = mountimg.putFile(pdf_doc);
+                                                uploadTask.addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Toast.makeText(getApplicationContext(), "승인전송이 거부 되었습니다.\n관리자에게 문의하세요!", Toast.LENGTH_SHORT).show();
+
+                                                    }
+                                                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                                    @Override
+                                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                                        Toast.makeText(getApplicationContext(), "결재가 승인되었습니다.", Toast.LENGTH_SHORT).show();
+                                                        //Uri downloadUrl = taskSnapshot.getUploadSessionUri();
+                                                        //startActivity(new Intent(getApplicationContext(), MainViewActivity.class));
+                                                        //finish();
+                                                    }
+                                                });
+                                            }catch (Exception e){
+                                                e.printStackTrace();
+                                            }
+                                            startActivity(new Intent(getApplicationContext(),MainViewActivity.class));
                                             finish();
                                         }
                                         @Override
@@ -193,38 +231,7 @@ public class ApprovalActivity extends AppCompatActivity {
                         public void onCancelled(@NonNull DatabaseError databaseError) {
                         }
                     });
-                    com.itextpdf.text.Document document = new com.itextpdf.text.Document();
-//                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//                    bitmap.compress(Bitmap.CompressFormat.PNG,100,stream);
-                    String newpdf = DIRECTORY+"/"+getIntent().getStringExtra("filename")+"(승인됨).pdf";
-                    PdfWriter.getInstance(document,new FileOutputStream(newpdf));
-                    document.open();
-                    Image image = Image.getInstance(StoredPath);
-                    float scaler = ((document.getPageSize().getWidth() - document.leftMargin()
-                            - document.rightMargin() - 0) / image.getWidth()) * 100; // 0 means you have no indentation. If you have any, change it.
-                    image.scalePercent(scaler);
-                    image.setAlignment(Image.ALIGN_CENTER | Image.ALIGN_TOP);
-                    document.add(image);
-                    document.close();
-//                    byte[] bytef = stream.toByteArray();
-                    Uri pdf_doc = Uri.fromFile(new File(newpdf));
-                    mountimg = storageReference.child(user.getUid()).child(getIntent().getStringExtra("filename")+"(승인됨).pdf");
-                    UploadTask uploadTask = mountimg.putFile(pdf_doc);
-                    uploadTask.addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getApplicationContext(),"승인전송이 거부 되었습니다.\n관리자에게 문의하세요!",Toast.LENGTH_SHORT).show();
 
-                        }
-                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            Toast.makeText(getApplicationContext(),"결재가 승인되었습니다.",Toast.LENGTH_SHORT).show();
-                            //Uri downloadUrl = taskSnapshot.getUploadSessionUri();
-                            startActivity(new Intent(getApplicationContext(),MainViewActivity.class));
-                            finish();
-                        }
-                    });
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -370,7 +377,7 @@ public class ApprovalActivity extends AppCompatActivity {
 
     public class signature extends View {
 
-        private static final float STROKE_WIDTH = 5f;
+        private static final float STROKE_WIDTH = 2f;
         private static final float HALF_STROKE_WIDTH = STROKE_WIDTH / 2;
         private Paint paint = new Paint();
         private Path path = new Path();
@@ -400,7 +407,9 @@ public class ApprovalActivity extends AppCompatActivity {
                 v.draw(canvas);
 
                 // Convert the output file to Image such as .png
-                bitmap.compress(Bitmap.CompressFormat.PNG, 90, mFileOutStream);
+               // bitmap.setWidth((int)(4960*getContext().getResources().getDisplayMetrics().density+0.5f));
+                //bitmap.setHeight((int)(7016*getContext().getResources().getDisplayMetrics().density+0.5f));
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, mFileOutStream);
                 mFileOutStream.flush();
                 mFileOutStream.close();
 

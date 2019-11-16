@@ -95,7 +95,7 @@ INJECTED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidMani
 		INJECTED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml
 		INJECTED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml
 	android:versionName
-		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:5:5-30
+		ADDED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml:5:5-32
 		INJECTED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml
 		INJECTED from C:\Users\user\AndroidStudioProjects\YEDAS\app\src\main\AndroidManifest.xml
 	xmlns:android

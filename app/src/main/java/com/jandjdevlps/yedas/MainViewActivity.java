@@ -1,15 +1,11 @@
 package com.jandjdevlps.yedas;
 
 import android.app.Notification;
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -21,12 +17,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.NotificationCompat;
-import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -41,8 +34,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
 
 public class MainViewActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
         Toolbar toolbar;
@@ -114,8 +105,8 @@ public class MainViewActivity extends AppCompatActivity implements NavigationVie
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     User userd = dataSnapshot.child(user.getUid()).getValue(User.class);
                     if (userd != null) {
-                        user_name.setText(userd.getUsername());
-                        user_email.setText(userd.getEmail());
+                        user_name.setText(userd.getStrUsername());
+                        user_email.setText(userd.getStrEmail());
                     } else {
                         user_name.setText(user.getDisplayName());
                         user_email.setText(user.getEmail());

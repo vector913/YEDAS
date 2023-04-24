@@ -81,10 +81,10 @@ public class MainActivity extends AppCompatActivity{
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         User userd = dataSnapshot.child(user.getUid()).getValue(User.class);
                         if(userd!=null) {
-                            emaisl = userd.getEmail();
-                            depts = userd.getDepartment();
-                            jobs = userd.getJob();
-                            names = userd.getUsername();
+                            emaisl = userd.getStrEmail();
+                            depts = userd.getStrDepartment();
+                            jobs = userd.getStrJob();
+                            names = userd.getStrUsername();
                             user_id.setText(emaisl);
                             user_name.setText(names);
                             user_dept.setText(depts);

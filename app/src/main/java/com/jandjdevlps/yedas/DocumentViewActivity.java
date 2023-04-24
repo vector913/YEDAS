@@ -118,7 +118,7 @@ public class DocumentViewActivity extends AppCompatActivity {
 //                                    System.out.println("key2 :" + dataSnapshot.getKey());
                     for (DataSnapshot un :dataSnapshot.getChildren()) {
                         User who = un.getValue(User.class);
-                        senderuid = who.getUsername();
+                        senderuid = who.getStrUsername();
                         // System.out.println("name :"+sender+" un.getkey() : "+un.getKey());
                         if(senderuid.equals(sender)){
                             senderuid = un.getKey();

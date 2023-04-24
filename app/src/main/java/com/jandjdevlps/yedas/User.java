@@ -1,5 +1,6 @@
 package com.jandjdevlps.yedas;
 
+//Note 로그인에 사용되는
 public class User {
     private String username;
     private String email;
@@ -7,10 +8,11 @@ public class User {
     private String job;
     private boolean verified;
 
+    //Note default constructor
     public User(){
-     //default constructor
-    }
 
+    }
+    //Note 실제 프로젝트에서 사용되는 Constructer.
     public User(String username, String email,String department,String job,Boolean isEmailVerified){
        this.username = username;
        this.email = email;
@@ -18,11 +20,11 @@ public class User {
        this. job = job;
        this.verified = isEmailVerified;
     }
-    public boolean getisVerified() {
+    public boolean isVerified() {
         return verified;
     }
 
-    public String getEmail() {
+    public String getStrEmail() {
         return email;
     }
 
@@ -30,7 +32,7 @@ public class User {
         this.email = email;
     }
 
-    public String getDepartment() {
+    public String getStrDepartment() {
         return department;
     }
 
@@ -38,7 +40,7 @@ public class User {
         this.department = department;
     }
 
-    public String getJob() {
+    public String getStrJob() {
         return job;
     }
 
@@ -46,7 +48,7 @@ public class User {
         this.job = job;
     }
 
-    public String getUsername() {
+    public String getStrUsername() {
         return username;
     }
 

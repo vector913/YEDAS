@@ -36,7 +36,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -44,7 +43,6 @@ import com.google.firebase.storage.UploadTask;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.pdf.PdfWriter;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 
@@ -142,7 +140,7 @@ public class ApprovalActivity extends AppCompatActivity {
 //                                    System.out.println("key2 :" + dataSnapshot.getKey());
                                     for (DataSnapshot un :dataSnapshot.getChildren()) {
                                         User who = un.getValue(User.class);
-                                        senderuid = who.getUsername();
+                                        senderuid = who.getStrUsername();
                                         // System.out.println("name :"+sender+" un.getkey() : "+un.getKey());
                                         if(senderuid.equals(sender)){
                                             senderuid = un.getKey();
@@ -300,7 +298,7 @@ public class ApprovalActivity extends AppCompatActivity {
                                                 System.out.println("key2 :" + dataSnapshot.getKey());
                                                 for (DataSnapshot un :dataSnapshot.getChildren()) {
                                                     User who = un.getValue(User.class);
-                                                    senderuid = who.getUsername();
+                                                    senderuid = who.getStrUsername();
                                                    // System.out.println("name :"+sender+" un.getkey() : "+un.getKey());
                                                     if(senderuid.equals(sender)){
                                                         senderuid = un.getKey();
